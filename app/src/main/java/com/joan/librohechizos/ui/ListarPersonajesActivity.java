@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.*;
@@ -45,7 +46,7 @@ public class ListarPersonajesActivity extends AppCompatActivity {
         DatabaseUtils.dumpCursor(datos.obtenerPersonajes());
     }
 
-    public void btnCrearPersonaje() {
+    public void btnCrearPersonaje(View view) {
         Intent intent = new Intent(ListarPersonajesActivity.this, CrearPersonaje.class);
         startActivity(intent);
     }
