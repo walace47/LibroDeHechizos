@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.CrearPersonaje"></activity>
+        <activity android:name=".ui.CrearPersonajeActivity"></activity>
         <activity android:name=".ui.ListarPersonajesActivity"></activity>
     </application>
 

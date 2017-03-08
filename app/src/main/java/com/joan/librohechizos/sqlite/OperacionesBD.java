@@ -92,6 +92,22 @@ public final class OperacionesBD {
         return resultado;
     }
 
+    public Cursor obtenerClases(String nombre) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String selection = String.format("%s=?", Clases.NOMBRE);
+        String[] selectionArgs = {nombre};
+        String tablas = Tablas.CLASE;
+        String[] proyeccion = {
+                Clases.ID_CLASE,
+                Clases.NOMBRE};
+
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, selection, selectionArgs, null, null, null);
+
+        return resultado;
+    }
+
     public long insertarClase(Clase clase) {
         ContentValues valores = new ContentValues();
         valores.put(Clases.NOMBRE, clase.getNombre());
@@ -109,6 +125,22 @@ public final class OperacionesBD {
 
         builder.setTables(tablas);
         Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
+
+        return resultado;
+    }
+
+    public Cursor obtenerRazas(String nombre) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String selection = String.format("%s=?", Razas.NOMBRE);
+        String[] selectionArgs = {nombre};
+        String tablas = Tablas.RAZA;
+        String[] proyeccion = {
+                Razas.ID_RAZA,
+                Razas.NOMBRE};
+
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion,selection, selectionArgs, null, null, null);
 
         return resultado;
     }
