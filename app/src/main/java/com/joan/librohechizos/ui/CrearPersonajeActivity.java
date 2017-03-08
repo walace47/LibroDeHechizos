@@ -34,42 +34,43 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         raza = (Spinner) findViewById(R.id.spn_personaje_raza);
         clase.setAdapter(llenarSpinnerClase());
         raza.setAdapter(llenarSpinnerRaza());
+
     }
 
     private ArrayAdapter llenarSpinnerClase() {
         Cursor consulta;
-        ArrayList<String> clases = new ArrayList<>();
+        ArrayList<Clase> clases = new ArrayList<>();
         try {
             datos.getDb().beginTransaction();
             consulta = datos.obtenerClases();
             while (consulta.moveToNext()) {
-                clases.add(consulta.getString(1));
+                clases.add(new Clase(consulta.getString(0),consulta.getString(1)));
             }
             datos.getDb().setTransactionSuccessful();
         } finally {
             datos.getDb().endTransaction();
         }
 
-        ArrayAdapter<String> lista = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, clases);
+        ArrayAdapter<Clase> lista = new ArrayAdapter<Clase>(this, android.R.layout.simple_spinner_item, clases);
 
         return lista;
     }
 
     private ArrayAdapter llenarSpinnerRaza() {
         Cursor consulta;
-        ArrayList<String> razas = new ArrayList<>();
+        ArrayList<Raza> razas = new ArrayList<>();
         try {
             datos.getDb().beginTransaction();
             consulta = datos.obtenerRazas();
             while (consulta.moveToNext()) {
-                razas.add(consulta.getString(1));
+                razas.add(new Raza(consulta.getString(0),consulta.getString(1)));
             }
             datos.getDb().setTransactionSuccessful();
         } finally {
             datos.getDb().endTransaction();
         }
 
-        ArrayAdapter<String> lista = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, razas);
+        ArrayAdapter<Raza> lista = new ArrayAdapter<Raza>(this, android.R.layout.simple_spinner_item, razas);
 
         return lista;
     }
@@ -77,14 +78,13 @@ public class CrearPersonajeActivity extends AppCompatActivity {
     public void btnPersonajeCrear(View v) {
         try {
             datos.getDb().beginTransaction();
-            String nom,raz,clas;
-            Cursor cursorAux;
-            cursorAux=datos.obtenerClases(clase.getSelectedItem().toString());
-            clas =cursorAux.getString(0);
+            String nom;
+            Raza raz;
+            Clase clas;
+            clas = (Clase)clase.getSelectedItem();
             nom = nombre.getText().toString();
-            cursorAux=datos.obtenerRazas(raza.getSelectedItem().toString());
-            raz=cursorAux.getString(0);
-            Personaje pj=new Personaje("",nom,clas,raz);
+            raz=(Raza)raza.getSelectedItem();
+            Personaje pj=new Personaje("" ,nom,clas.getIdClase(),raz.getIdRaza());
             long idPersonaje=datos.insertarPersonaje(pj);
             Log.d("Personaje nuevo","ID: "+idPersonaje);
             datos.getDb().setTransactionSuccessful();
