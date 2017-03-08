@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
 import com.joan.librohechizos.modelo.*;
 import com.joan.librohechizos.sqlite.Contratos.*;
@@ -26,6 +27,7 @@ public final class OperacionesBD {
     public static OperacionesBD obtenerInstancia(Context contexto) {
         if (baseDatos == null) {
             baseDatos = new LibroHechizosBD(contexto);
+            instancia.precargarDatos();
         }
         return instancia;
     }
@@ -92,22 +94,6 @@ public final class OperacionesBD {
         return resultado;
     }
 
-    public Cursor obtenerClases(String nombre) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        String selection = String.format("%s=?", Clases.NOMBRE);
-        String[] selectionArgs = {nombre};
-        String tablas = Tablas.CLASE;
-        String[] proyeccion = {
-                Clases.ID_CLASE,
-                Clases.NOMBRE};
-
-        builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion, selection, selectionArgs, null, null, null);
-
-        return resultado;
-    }
-
     public long insertarClase(Clase clase) {
         ContentValues valores = new ContentValues();
         valores.put(Clases.NOMBRE, clase.getNombre());
@@ -129,22 +115,6 @@ public final class OperacionesBD {
         return resultado;
     }
 
-    public Cursor obtenerRazas(String nombre) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        String selection = String.format("%s=?", Razas.NOMBRE);
-        String[] selectionArgs = {nombre};
-        String tablas = Tablas.RAZA;
-        String[] proyeccion = {
-                Razas.ID_RAZA,
-                Razas.NOMBRE};
-
-        builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion,selection, selectionArgs, null, null, null);
-
-        return resultado;
-    }
-
     public long insertarRaza(Raza raza) {
         ContentValues valores = new ContentValues();
         valores.put(Razas.NOMBRE, raza.getNombre());
@@ -154,5 +124,47 @@ public final class OperacionesBD {
 
     public SQLiteDatabase getDb() {
         return baseDatos.getWritableDatabase();
+    }
+
+    public void precargarDatos() {
+        try {
+            getDb().beginTransaction();
+            long idClase = insertarClase(new Clase("", "Guerrero"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            idClase = insertarClase(new Clase("", "Paladin"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            idClase = insertarClase(new Clase("", "Clerigo"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            idClase = insertarClase(new Clase("", "Druida"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            idClase = insertarClase(new Clase("", "Hechizero"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            idClase = insertarClase(new Clase("", "Mago"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            idClase = insertarClase(new Clase("", "Brujo"));
+            Log.d("Clase nueva", "ID: " + idClase);
+            //se cargaron las clases
+            long idRaza = insertarRaza(new Raza("", "Humano"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Draconido"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Elfo"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Tieflin"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Gnomo"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Mediano"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Enano"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            idRaza = insertarRaza(new Raza("", "Genazi"));
+            Log.d("Raza nueva", "ID: " + idRaza);
+            long idPersonaje = insertarPersonaje(new Personaje("", "Leonidas", "1", "1"));
+            Log.d("Personaje nuevo", "ID: " + idPersonaje);
+            getDb().setTransactionSuccessful();
+        } finally {
+            getDb().endTransaction();
+        }
     }
 }

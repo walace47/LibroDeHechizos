@@ -5,19 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:text="CREAR PERSONAJE"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_crear_personaje"
-        android:onClick="btnCrearPersonaje" />
+        android:layout_height="match_parent">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tbl_personajes"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    </TableLayout>
+            <Button
+                android:id="@+id/btn_crear_personaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="btnCrearPersonaje"
+                android:text="CREAR PERSONAJE" />
+
+            <TableLayout
+                android:id="@+id/tbl_personajes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:stretchColumns="0">
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

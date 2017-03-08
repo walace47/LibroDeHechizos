@@ -2,6 +2,7 @@ package com.joan.librohechizos.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,19 +10,18 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.joan.librohechizos.R;
-import com.joan.librohechizos.modelo.Clase;
-import com.joan.librohechizos.modelo.Personaje;
-import com.joan.librohechizos.modelo.Raza;
+import com.joan.librohechizos.modelo.*;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 
 import java.util.ArrayList;
 
 public class CrearPersonajeActivity extends AppCompatActivity {
-    private EditText nombre;
-    private Spinner clase;
-    private Spinner raza;
+    private EditText edtNombre;
+    private Spinner spnClase;
+    private Spinner spnRaza;
     private OperacionesBD datos;
 
     @Override
@@ -29,69 +29,98 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_personaje);
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
-        nombre = (EditText) findViewById(R.id.edt_personaje_nombre);
-        clase = (Spinner) findViewById(R.id.spn_personaje_clase);
-        raza = (Spinner) findViewById(R.id.spn_personaje_raza);
-        clase.setAdapter(llenarSpinnerClase());
-        raza.setAdapter(llenarSpinnerRaza());
+
+        edtNombre = (EditText) findViewById(R.id.edt_personaje_nombre);
+        spnClase = (Spinner) findViewById(R.id.spn_personaje_clase);
+        spnRaza = (Spinner) findViewById(R.id.spn_personaje_raza);
+
+        spnClase.setAdapter(cargarClases());
+        spnRaza.setAdapter(cargarRazas());
 
     }
 
-    private ArrayAdapter llenarSpinnerClase() {
-        Cursor consulta;
+    private ArrayAdapter cargarClases() {
+        Cursor listaClases;
         ArrayList<Clase> clases = new ArrayList<>();
         try {
             datos.getDb().beginTransaction();
-            consulta = datos.obtenerClases();
-            while (consulta.moveToNext()) {
-                clases.add(new Clase(consulta.getString(0),consulta.getString(1)));
+            listaClases = datos.obtenerClases();
+            while (listaClases.moveToNext()) {
+                clases.add(new Clase(listaClases.getString(0), listaClases.getString(1)));
             }
             datos.getDb().setTransactionSuccessful();
         } finally {
             datos.getDb().endTransaction();
         }
-
-        ArrayAdapter<Clase> lista = new ArrayAdapter<Clase>(this, android.R.layout.simple_spinner_item, clases);
-
-        return lista;
+        ArrayAdapter<Clase> adtSpnClases = new ArrayAdapter<Clase>(this, android.R.layout.simple_spinner_item, clases);
+        return adtSpnClases;
     }
 
-    private ArrayAdapter llenarSpinnerRaza() {
-        Cursor consulta;
+    private ArrayAdapter cargarRazas() {
+        Cursor listaRazas;
         ArrayList<Raza> razas = new ArrayList<>();
         try {
             datos.getDb().beginTransaction();
-            consulta = datos.obtenerRazas();
-            while (consulta.moveToNext()) {
-                razas.add(new Raza(consulta.getString(0),consulta.getString(1)));
+            listaRazas = datos.obtenerRazas();
+            while (listaRazas.moveToNext()) {
+                razas.add(new Raza(listaRazas.getString(0), listaRazas.getString(1)));
             }
             datos.getDb().setTransactionSuccessful();
         } finally {
             datos.getDb().endTransaction();
         }
-
-        ArrayAdapter<Raza> lista = new ArrayAdapter<Raza>(this, android.R.layout.simple_spinner_item, razas);
-
-        return lista;
+        ArrayAdapter<Raza> adtSpnRazas = new ArrayAdapter<Raza>(this, android.R.layout.simple_spinner_item, razas);
+        return adtSpnRazas;
     }
 
     public void btnPersonajeCrear(View v) {
-        try {
-            datos.getDb().beginTransaction();
-            String nom;
-            Raza raz;
-            Clase clas;
-            clas = (Clase)clase.getSelectedItem();
-            nom = nombre.getText().toString();
-            raz=(Raza)raza.getSelectedItem();
-            Personaje pj=new Personaje("" ,nom,clas.getIdClase(),raz.getIdRaza());
-            long idPersonaje=datos.insertarPersonaje(pj);
-            Log.d("Personaje nuevo","ID: "+idPersonaje);
-            datos.getDb().setTransactionSuccessful();
-        }finally {
-            datos.getDb().endTransaction();
-            Intent intent = new Intent(CrearPersonajeActivity.this, ListarPersonajesActivity.class);
-            startActivity(intent);
+        if (!edtNombre.getText().toString().equals("")) {
+            String nombre = edtNombre.getText().toString();
+            String idClase = ((Clase) spnClase.getSelectedItem()).getIdClase();
+            String idRaza = ((Raza) spnRaza.getSelectedItem()).getIdRaza();
+
+            new insertarPersonaje(nombre,idClase,idRaza).execute();
+            //Esto cierra el activity de CrearPersonaje, y por lo tanto vuelve al activity anterior
+            //que es el ListarPersonajes
+            finish();
+        }
+    }
+
+    public class insertarPersonaje extends AsyncTask<Void, Void, Void> {
+
+        private String nombre;
+        private String idClase;
+        private String idRaza;
+
+        public insertarPersonaje(String nombre, String idClase, String idRaza) {
+            this.nombre = nombre;
+            this.idClase = idClase;
+            this.idRaza = idRaza;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            long idPersonaje = -1;
+            try {
+                datos.getDb().beginTransaction();
+
+                Personaje personajeNuevo = new Personaje("", nombre, idClase, idRaza);
+
+                idPersonaje = datos.insertarPersonaje(personajeNuevo);
+                Log.d("Personaje nuevo", "ID: " + idPersonaje);
+
+                datos.getDb().setTransactionSuccessful();
+            } finally {
+                datos.getDb().endTransaction();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast mensajeExito = Toast.makeText(getApplicationContext(),"Personaje creado correctamente",Toast.LENGTH_SHORT);
+            mensajeExito.show();
         }
     }
 

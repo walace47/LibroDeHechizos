@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Libro de hechizos</string>
+    <string name="activity_listar_personajes">Personajes</string>
+    <string name="activity_crear_personaje">Crear personaje</string>
 </resources>
