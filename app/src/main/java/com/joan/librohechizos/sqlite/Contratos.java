@@ -25,6 +25,34 @@ public class Contratos {
         String NOMBRE = "nombre";
     }
 
+    interface ColumnasHechizos{
+        String ID_HECHIZO="id_hechizo";
+        String NOMBRE="nombre";
+        String RANGO="rango";
+        String ESCUELA="escuela";
+        String TIEMPO_DE_CASTEO="tiempo_de_casteo";
+        String DURACION="duracion";
+        String CONCENTRACION="concentracion";
+        String  RITUAL="ritual";
+        String COMPONENTE_VERBAL="componente_verbal";
+        String COMPONENTE_SOMATICO="componente_somatico";
+        String COMPONENTE_MATERIAL="compoenete_material";
+        String DESCRIPCION="descripcion";
+        String A_MAYOR_NIVEL="aMayorNivel";
+    }
+
+    interface ColumnasHechizosAprendidos{
+        String ID_PERSONAJE="id_personaje";
+        String ID_HECHIZO="id_hechizo";
+        String PREPARADO="preparado";
+    }
+
+    interface ColumnasHechizosPorClases{
+        String ID_CLASE="id_clase";
+        String ID_HECHIZO="id_hechizo";
+
+    }
+
     public static class Personajes implements ColumnasPersonaje {
         public static String generarIdPersonaje() {
             return "P-"+ UUID.randomUUID().toString();
@@ -40,6 +68,12 @@ public class Contratos {
     public static class Razas implements ColumnasRaza {
         public static String generarIdRaza() {
             return "R-"+ UUID.randomUUID().toString();
+        }
+    }
+
+    public static class Hechizos implements ColumnasHechizos{
+        public static String genetarIdHechizo(){
+            return "H-"+ UUID.randomUUID().toString();
         }
     }
 

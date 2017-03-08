@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.provider.BaseColumns;
 
+import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.sqlite.Contratos.*;
 
 /**
@@ -30,6 +31,9 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         String PERSONAJE = "personaje";
         String CLASE = "clase";
         String RAZA = "raza";
+        String HECHIZOS="hechizos";
+        String HECHIZOS_APRENDIDOS="hechizos_aprendidos";
+        String HECHIZOS_POR_CLASE="hechizos_por clase";
     }
 
     interface Referencias {
@@ -41,6 +45,9 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
         String ID_RAZA = String.format("REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE",
                 Tablas.RAZA, Razas.ID_RAZA);
+
+        String ID_HECHIZOS=String.format("REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE",
+                Tablas.HECHIZOS,Hechizos.ID_HECHIZO);
     }
 
     @Override
@@ -76,6 +83,38 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
                 Tablas.RAZA,
                 Razas.ID_RAZA,
                 Razas.NOMBRE));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT NOT NULL,%s TEXT NOT NULL, %s TEXT NOT NULL ,%s INTEGER NOT NULL,"+
+                        "%s INTEGER NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL, %s INTEGER NOT NULL"+
+                        "%s INTEGER NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL)",
+                Tablas.HECHIZOS,
+                Hechizos.ID_HECHIZO,
+                Hechizos.NOMBRE,
+                Hechizos.DESCRIPCION,
+                Hechizos.A_MAYOR_NIVEL,
+                Hechizos.RANGO,
+                Hechizos.COMPONENTE_VERBAL,
+                Hechizos.COMPONENTE_SOMATICO,
+                Hechizos.COMPONENTE_MATERIAL,
+                Hechizos.RITUAL,
+                Hechizos.CONCENTRACION,
+                Hechizos.TIEMPO_DE_CASTEO,
+                Hechizos.ESCUELA));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER NOT NULL %s," +
+                        "%s INTEGER NOT NULL %s, UNIQUE(%s,%s))",
+                Tablas.HECHIZOS_POR_CLASE,
+                Clases.ID_CLASE,Referencias.ID_CLASE,
+                Hechizos.ID_HECHIZO,Referencias.ID_HECHIZOS,
+                Clases.ID_CLASE,Hechizos.ID_HECHIZO));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER NOT NULL %s," +
+                        "%s INTEGER NOT NULL %s, UNIQUE(%s,%s))",
+                Tablas.HECHIZOS_APRENDIDOS,
+                Personajes.ID_PERSONAJE, Referencias.ID_PERSONAJE,
+                Hechizos.ID_HECHIZO,Referencias.ID_HECHIZOS,
+                Personajes.ID_PERSONAJE,Hechizos.ID_HECHIZO));
     }
 
     @Override
@@ -83,6 +122,10 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.PERSONAJE);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CLASE);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.RAZA);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.HECHIZOS);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.HECHIZOS_APRENDIDOS);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.HECHIZOS_POR_CLASE);
+
         onCreate(db);
     }
 }
