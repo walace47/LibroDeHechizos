@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Personaje;
@@ -31,6 +33,13 @@ public class ListarPersonajes extends AppCompatActivity {
         AdaptadorPersonaje adaptador = new AdaptadorPersonaje(this);
         ListView listaPersonajes = (ListView)findViewById(R.id.list_personajes);
         listaPersonajes.setAdapter(adaptador);
+        //Aca se define que se hace cuando se clikea un personaje
+        listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(ListarPersonajes.this,lista.get(i).getNombre(), Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
