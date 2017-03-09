@@ -1,19 +1,27 @@
 package com.joan.librohechizos.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.*;
+import com.joan.librohechizos.sqlite.Contratos;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 
 import java.util.ArrayList;
@@ -33,7 +41,6 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         edtNombre = (EditText) findViewById(R.id.edt_personaje_nombre);
         spnClase = (Spinner) findViewById(R.id.spn_personaje_clase);
         spnRaza = (Spinner) findViewById(R.id.spn_personaje_raza);
-
         spnClase.setAdapter(cargarClases());
         spnRaza.setAdapter(cargarRazas());
 
@@ -41,7 +48,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
 
     private ArrayAdapter cargarClases() {
         Cursor listaClases;
-        ArrayList<Clase> clases = new ArrayList<>();
+        ArrayList<Object> clases = new ArrayList<>();
         try {
             datos.getDb().beginTransaction();
             listaClases = datos.obtenerClases();
@@ -52,13 +59,13 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         } finally {
             datos.getDb().endTransaction();
         }
-        ArrayAdapter<Clase> adtSpnClases = new ArrayAdapter<Clase>(this, android.R.layout.simple_spinner_item, clases);
+        MyAdapter adtSpnClases = new MyAdapter(this, android.R.layout.simple_spinner_item, clases);
         return adtSpnClases;
     }
 
     private ArrayAdapter cargarRazas() {
         Cursor listaRazas;
-        ArrayList<Raza> razas = new ArrayList<>();
+        ArrayList<Object> razas = new ArrayList<>();
         try {
             datos.getDb().beginTransaction();
             listaRazas = datos.obtenerRazas();
@@ -69,7 +76,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         } finally {
             datos.getDb().endTransaction();
         }
-        ArrayAdapter<Raza> adtSpnRazas = new ArrayAdapter<Raza>(this, android.R.layout.simple_spinner_item, razas);
+        MyAdapter adtSpnRazas = new MyAdapter(this, R.layout.spiner_personalizado, razas);
         return adtSpnRazas;
     }
 
@@ -121,6 +128,35 @@ public class CrearPersonajeActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             Toast mensajeExito = Toast.makeText(getApplicationContext(),"Personaje creado correctamente",Toast.LENGTH_SHORT);
             mensajeExito.show();
+        }
+    }
+
+    //para que se vea mas lindo el spinner
+    public class MyAdapter extends ArrayAdapter<Object>{
+
+        public MyAdapter(Context context, int textViewResourceId,ArrayList<Object> objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater=getLayoutInflater();
+            View row=inflater.inflate(R.layout.spiner_personalizado, parent, false);
+            TextView label=(TextView)row.findViewById(R.id.txt_nombre);
+            label.setText(this.getItem(position).toString());
+
+
+            return row;
         }
     }
 

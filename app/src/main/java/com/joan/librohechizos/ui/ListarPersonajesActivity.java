@@ -10,12 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.joan.librohechizos.R;
-import com.joan.librohechizos.modelo.*;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 
 /**
@@ -30,13 +27,15 @@ public class ListarPersonajesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listar_personajes);
+        //setContentView(R.layout.activity_listar_personajes);
+        Intent intent = new Intent(this, ListarPersonajes.class);
+        startActivity(intent);
         //Esto hace que la base de datos se borre cada vez que ejecutas la app
         getApplicationContext().deleteDatabase("librohechizos.sqlite");
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
 
-        tblPersonajes = (TableLayout) findViewById(R.id.tbl_personajes);
-        listarPersonajes();
+        //tblPersonajes = (TableLayout) findViewById(R.id.tbl_personajes);
+       // listarPersonajes();
     }
 
     @Override
