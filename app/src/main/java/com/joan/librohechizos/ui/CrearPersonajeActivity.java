@@ -59,7 +59,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         } finally {
             datos.getDb().endTransaction();
         }
-        MyAdapter adtSpnClases = new MyAdapter(this, android.R.layout.simple_spinner_item, clases);
+        MyAdapter adtSpnClases = new MyAdapter(this, R.layout.spiner_personalizado, clases);
         return adtSpnClases;
     }
 
@@ -76,7 +76,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         } finally {
             datos.getDb().endTransaction();
         }
-        MyAdapter adtSpnRazas = new MyAdapter(this, R.layout.spiner_personalizado, razas);
+        MyAdapter adtSpnRazas = new MyAdapter(this,  R.layout.spiner_personalizado, razas);
         return adtSpnRazas;
     }
 
@@ -86,50 +86,33 @@ public class CrearPersonajeActivity extends AppCompatActivity {
             String idClase = ((Clase) spnClase.getSelectedItem()).getIdClase();
             String idRaza = ((Raza) spnRaza.getSelectedItem()).getIdRaza();
 
-            new insertarPersonaje(nombre,idClase,idRaza).execute();
+            insertarPersonaje(nombre,idClase,idRaza);
             //Esto cierra el activity de CrearPersonaje, y por lo tanto vuelve al activity anterior
             //que es el ListarPersonajes
             finish();
         }
     }
 
-    public class insertarPersonaje extends AsyncTask<Void, Void, Void> {
+    private void insertarPersonaje(String nombre,String idClase,String idRaza){
+        long idPersonaje;
+        try {
+            datos.getDb().beginTransaction();
+            Personaje personajeNuevo = new Personaje("", nombre, idClase, idRaza);
 
-        private String nombre;
-        private String idClase;
-        private String idRaza;
+            idPersonaje = datos.insertarPersonaje(personajeNuevo);
+            Log.d("Personaj0e nuevo", "ID: " + idPersonaje);
 
-        public insertarPersonaje(String nombre, String idClase, String idRaza) {
-            this.nombre = nombre;
-            this.idClase = idClase;
-            this.idRaza = idRaza;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            long idPersonaje = -1;
-            try {
-                datos.getDb().beginTransaction();
-
-                Personaje personajeNuevo = new Personaje("", nombre, idClase, idRaza);
-
-                idPersonaje = datos.insertarPersonaje(personajeNuevo);
-                Log.d("Personaje nuevo", "ID: " + idPersonaje);
-
-                datos.getDb().setTransactionSuccessful();
-            } finally {
-                datos.getDb().endTransaction();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+            datos.getDb().setTransactionSuccessful();
             Toast mensajeExito = Toast.makeText(getApplicationContext(),"Personaje creado correctamente",Toast.LENGTH_SHORT);
             mensajeExito.show();
+
+        } finally {
+            datos.getDb().endTransaction();
         }
+
+
     }
+
 
     //para que se vea mas lindo el spinner
     public class MyAdapter extends ArrayAdapter<Object>{

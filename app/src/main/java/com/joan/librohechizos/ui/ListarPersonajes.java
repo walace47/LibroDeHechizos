@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class ListarPersonajes extends AppCompatActivity {
     private ArrayList<Personaje> lista;
     private OperacionesBD datos;
+    private ListView listaPersonajes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +30,8 @@ public class ListarPersonajes extends AppCompatActivity {
         getApplicationContext().deleteDatabase("librohechizos.sqlite");
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
         lista=new ArrayList<Personaje>();
-        obtenerPersonajes();
-        AdaptadorPersonaje adaptador = new AdaptadorPersonaje(this);
-        ListView listaPersonajes = (ListView)findViewById(R.id.list_personajes);
-        listaPersonajes.setAdapter(adaptador);
+        listaPersonajes = (ListView)findViewById(R.id.list_personajes);
+        cargarPersonajes();
         //Aca se define que se hace cuando se clikea un personaje
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -41,6 +40,12 @@ public class ListarPersonajes extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void cargarPersonajes(){
+        obtenerPersonajes();
+        AdaptadorPersonaje adaptador = new AdaptadorPersonaje(this);
+        listaPersonajes.setAdapter(adaptador);
     }
 
     // es el adaptador para la lista de los personajes
@@ -68,20 +73,19 @@ public class ListarPersonajes extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        lista=new ArrayList<Personaje>();
-        obtenerPersonajes();
-        AdaptadorPersonaje adaptador = new AdaptadorPersonaje(this);
-        ListView lv1 = (ListView)findViewById(R.id.list_personajes);
-        lv1.setAdapter(adaptador);
+        cargarPersonajes();
     }
 
     public void btnCrearPersonaje(View view) {
+        //Intent intent = new Intent(this, MostrarHechizo.class);
+        //startActivity(intent);
         Intent intent = new Intent(this, CrearPersonajeActivity.class);
         startActivity(intent);
     }
 
     private void obtenerPersonajes(){
         Cursor listaPersonajes = datos.obtenerPersonajes();
+        lista.clear();
         try {
             while (listaPersonajes.moveToNext()) {
                 lista.add(new Personaje(listaPersonajes.getString(0),listaPersonajes.getString(1),listaPersonajes.getString(2),listaPersonajes.getString(3)));
@@ -91,5 +95,4 @@ public class ListarPersonajes extends AppCompatActivity {
 
         }
     }
-    //<activity android:name=".ui.ListarPersonajes"></activity>
 }

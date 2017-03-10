@@ -21,8 +21,7 @@
             android:name=".ui.CrearPersonajeActivity"
             android:label="@string/activity_crear_personaje"
             android:parentActivityName=".ui.ListarPersonajes" />
-        <activity android:name=".ui.ListarHechizos" />
-
+        <activity android:name=".ui.MostrarHechizo"></activity>
     </application>
 
 </manifest>
