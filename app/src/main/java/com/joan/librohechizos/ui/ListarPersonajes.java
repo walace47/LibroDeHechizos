@@ -1,9 +1,12 @@
 package com.joan.librohechizos.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,25 +34,56 @@ public class ListarPersonajes extends AppCompatActivity {
         getApplicationContext().deleteDatabase("librohechizos.sqlite");
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
         lista=new ArrayList<Personaje>();
-        listaPersonajes = (ListView)findViewById(R.id.list_personajes);
+        listaPersonajes = (ListView) findViewById(R.id.list_personajes);
         cargarPersonajes();
-        //Aca se define que se hace cuando se clikea un personaje
+
+        //metodo que se ejecuta cuando se clikea un personaje
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(ListarPersonajes.this, MostrarHechizo.class);
-                startActivity(intent);
-               // Intent intent = new Intent(ListarPersonajes.this,ListarHechizos.class);
-               // intent.putExtra("idPersonaje",lista.get(i).getIdPersonaje());
+                Toast.makeText(ListarPersonajes.this,lista.get(i).getNombre(), Toast.LENGTH_LONG).show();
+                adapterView.getSelectedItem();
+
+            }
+
+        });
+        //cuando se quiere eliminar un personaje
+        listaPersonajes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                final int posicion=i;
+
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(ListarPersonajes.this);
+                dialogo1.setTitle("Importante");
+                dialogo1.setMessage("¿ Elimina el personaje ?");
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        eliminarPersonaje(lista.get(i).getIdPersonaje());
+                        lista.remove(posicion);
+                        cargarPersonajes();
+                    }
+                });
+                dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                    }
+                });
+                dialogo1.show();
+
+                return false;
             }
         });
 
+
     }
+
+
 
     private void cargarPersonajes(){
         obtenerPersonajes();
         AdaptadorPersonaje adaptador = new AdaptadorPersonaje(this,lista);
         listaPersonajes.setAdapter(adaptador);
+
     }
 
 
@@ -65,16 +99,40 @@ public class ListarPersonajes extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void mostrarNombre(View v){
+        Toast.makeText(this, "hola",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    public void btnEliminarPersonaje(View v,int i){
+
+    }
+
     private void obtenerPersonajes(){
         Cursor listaPersonajes = datos.obtenerPersonajes();
         lista.clear();
         try {
-            while (listaPersonajes.moveToNext()) {
+            while (listaPersonajes!=null && listaPersonajes.moveToNext()) {
                 lista.add(new Personaje(listaPersonajes.getString(0),listaPersonajes.getString(1),listaPersonajes.getString(2),listaPersonajes.getString(3)));
             }
         }finally {
             listaPersonajes.close();
 
         }
+    }
+
+    private void eliminarPersonaje(String idPersonaje){
+        try {
+            datos.getDb().beginTransaction();
+            datos.eliminarPersonaje(idPersonaje);
+            datos.getDb().setTransactionSuccessful();
+            Toast mensajeExito = Toast.makeText(getApplicationContext(),"Personaje eliminado correctamente",Toast.LENGTH_SHORT);
+            mensajeExito.show();
+
+        } finally {
+            datos.getDb().endTransaction();
+        }
+
+
     }
 }

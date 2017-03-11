@@ -1,6 +1,5 @@
 package com.joan.librohechizos.utiles;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,5 +37,9 @@ public class AdaptadorPersonaje extends ArrayAdapter<Personaje> {
         raza.setText(lista.get(position).getIdRaza());
         return item;
     }
+
+
+
+
 }
 

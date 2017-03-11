@@ -128,6 +128,8 @@ public final class OperacionesBD {
         return resultado;
     }
 
+
+
     public Cursor obtenerRazas() {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -174,6 +176,13 @@ public final class OperacionesBD {
         valores.put(Razas.NOMBRE, raza.getNombre());
         long idResultado = getDb().insertOrThrow(Tablas.RAZA, null, valores);
         return idResultado;
+    }
+
+    public void eliminarPersonaje(String idPersonaje){
+        SQLiteDatabase db = baseDatos.getWritableDatabase();
+        String whereClause=Personajes.ID_PERSONAJE+"=?";
+        String[] whereArgs = {idPersonaje};
+        db.delete(Tablas.PERSONAJE, whereClause, whereArgs);
     }
 
     public SQLiteDatabase getDb() {
