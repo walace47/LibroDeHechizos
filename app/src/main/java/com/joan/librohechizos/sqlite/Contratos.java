@@ -30,15 +30,17 @@ public class Contratos {
         String NOMBRE="nombre";
         String RANGO="rango";
         String ESCUELA="escuela";
+        String NIVEL="nivel";
         String TIEMPO_DE_CASTEO="tiempo_de_casteo";
         String DURACION="duracion";
         String CONCENTRACION="concentracion";
         String  RITUAL="ritual";
         String COMPONENTE_VERBAL="componente_verbal";
         String COMPONENTE_SOMATICO="componente_somatico";
-        String COMPONENTE_MATERIAL="compoenete_material";
+        String COMPONENTE_MATERIAL="componente_material";
+        String DESCRIPCION_COMPONENTE="descripcion_componente";
         String DESCRIPCION="descripcion";
-        String A_MAYOR_NIVEL="aMayorNivel";
+        String A_MAYOR_NIVEL="a_mayor_nivel";
     }
 
     interface ColumnasHechizosAprendidos{

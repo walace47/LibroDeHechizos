@@ -86,8 +86,8 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "%s TEXT NOT NULL,%s TEXT NOT NULL, %s TEXT NOT NULL ,%s INTEGER NOT NULL,"+
-                        "%s INTEGER NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL, %s INTEGER NOT NULL, "+
-                        "%s INTEGER NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL)",
+                        "%s INTEGER NOT NULL, %s INTEGER NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL," +
+                        " %s INTEGER NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL)",
                 Tablas.HECHIZOS,
                 Hechizos.ID_HECHIZO,
                 Hechizos.NOMBRE,
@@ -97,24 +97,27 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
                 Hechizos.COMPONENTE_VERBAL,
                 Hechizos.COMPONENTE_SOMATICO,
                 Hechizos.COMPONENTE_MATERIAL,
+                Hechizos.DESCRIPCION_COMPONENTE,
                 Hechizos.RITUAL,
                 Hechizos.CONCENTRACION,
                 Hechizos.TIEMPO_DE_CASTEO,
-                Hechizos.ESCUELA));
+                Hechizos.ESCUELA,
+                Hechizos.NIVEL,
+                Hechizos.DURACION));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER NOT NULL %s," +
                         "%s INTEGER NOT NULL %s, PRIMARY KEY(%s,%s))",
                 Tablas.HECHIZOS_POR_CLASE,
                 Clases.ID_CLASE,Referencias.ID_CLASE,
                 Hechizos.ID_HECHIZO,Referencias.ID_HECHIZOS,
-                Clases.ID_CLASE,Clases.ID_CLASE));
+                Clases.ID_CLASE,Hechizos.ID_HECHIZO));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER NOT NULL %s, " +
                         "%s INTEGER NOT NULL %s, PRIMARY KEY(%s,%s))",
                 Tablas.HECHIZOS_APRENDIDOS,
                 Personajes.ID_PERSONAJE, Referencias.ID_PERSONAJE,
                 Hechizos.ID_HECHIZO,Referencias.ID_HECHIZOS,
-                Personajes.ID_PERSONAJE, Personajes.ID_PERSONAJE));
+                Personajes.ID_PERSONAJE, Hechizos.ID_HECHIZO));
     }
 
     @Override

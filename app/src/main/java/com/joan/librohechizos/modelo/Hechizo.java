@@ -8,21 +8,24 @@ public class Hechizo {
     private String idHechizo;
     private String nombre;
     private int rango;
+    private int nivel;
     private String escuela;
     private String tiempoDeCasteo;
     private String duracion;
-    private boolean concentracion;
-    private boolean ritual;
-    private boolean componenteVerbal;
-    private boolean componenteSomatico;
-    private String componenteMaterial;
+    private int concentracion;//es un boolean
+    private int ritual;//es un boolean
+    private int componenteVerbal;//es un boolean
+    private int componenteSomatico;//es un boolean
+    private int componenteMaterial;//es un boolean
+    private String descripcionDelComponenteMaterial;
     private String descripcion;
     private String aMayorNivel;
 
-    public Hechizo(String idHechizo,String nombre, int rango, String escuela, String tiempoDeCasteo, String duracion, boolean concentracion, boolean ritual, boolean componenteVerbal, boolean componenteSomatico, String componenteMaterial, String descripcion, String aMayorNivel) {
+    public Hechizo(String idHechizo, String nombre, int rango, int nivel, String escuela, String tiempoDeCasteo, String duracion, int concentracion, int ritual, int componenteVerbal, int componenteSomatico, int componenteMaterial, String descripcionDelComponenteMaterial, String descripcion, String aMayorNivel) {
         this.idHechizo = idHechizo;
-        this.nombre=nombre;
+        this.nombre = nombre;
         this.rango = rango;
+        this.nivel = nivel;
         this.escuela = escuela;
         this.tiempoDeCasteo = tiempoDeCasteo;
         this.duracion = duracion;
@@ -31,6 +34,7 @@ public class Hechizo {
         this.componenteVerbal = componenteVerbal;
         this.componenteSomatico = componenteSomatico;
         this.componenteMaterial = componenteMaterial;
+        this.descripcionDelComponenteMaterial = descripcionDelComponenteMaterial;
         this.descripcion = descripcion;
         this.aMayorNivel = aMayorNivel;
     }
@@ -39,100 +43,116 @@ public class Hechizo {
         return idHechizo;
     }
 
-    public int getRango() {
-        return rango;
-    }
-
-    public String getEscuela() {
-        return escuela;
-    }
-
-    public String getTiempoDeCasteo() {
-        return tiempoDeCasteo;
-    }
-
-    public String getDuracion() {
-        return duracion;
-    }
-
-    public boolean isConcentracion() {
-        return concentracion;
-    }
-
-    public boolean isRitual() {
-        return ritual;
-    }
-
-    public boolean isComponenteVerbal() {
-        return componenteVerbal;
-    }
-
-    public boolean isComponenteSomatico() {
-        return componenteSomatico;
-    }
-
-    public String getComponenteMaterial() {
-        return componenteMaterial;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
+    public void setIdHechizo(String idHechizo) {
+        this.idHechizo = idHechizo;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public String getaMayorNivel() {
-        return aMayorNivel;
-    }
-
-    public void setIdHechizo(String idHechizo) {
-        this.idHechizo = idHechizo;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public int getRango() {
+        return rango;
     }
 
     public void setRango(int rango) {
         this.rango = rango;
     }
 
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+
+    public String getEscuela() {
+        return escuela;
+    }
+
     public void setEscuela(String escuela) {
         this.escuela = escuela;
+    }
+
+    public String getTiempoDeCasteo() {
+        return tiempoDeCasteo;
     }
 
     public void setTiempoDeCasteo(String tiempoDeCasteo) {
         this.tiempoDeCasteo = tiempoDeCasteo;
     }
 
+    public String getDuracion() {
+        return duracion;
+    }
+
     public void setDuracion(String duracion) {
         this.duracion = duracion;
     }
 
-    public void setConcentracion(boolean concentracion) {
+    public int getConcentracion() {
+        return concentracion;
+    }
+
+    public void setConcentracion(int concentracion) {
         this.concentracion = concentracion;
     }
 
-    public void setRitual(boolean ritual) {
+    public int getRitual() {
+        return ritual;
+    }
+
+    public void setRitual(int ritual) {
         this.ritual = ritual;
     }
 
-    public void setComponenteVerbal(boolean componenteVerbal) {
+    public int getComponenteVerbal() {
+        return componenteVerbal;
+    }
+
+    public void setComponenteVerbal(int componenteVerbal) {
         this.componenteVerbal = componenteVerbal;
     }
 
-    public void setComponenteSomatico(boolean componenteSomatico) {
+    public int getComponenteSomatico() {
+        return componenteSomatico;
+    }
+
+    public void setComponenteSomatico(int componenteSomatico) {
         this.componenteSomatico = componenteSomatico;
     }
 
-    public void setComponenteMaterial(String compoeneteMaterial) {
-        this.componenteMaterial = compoeneteMaterial;
+    public int getComponenteMaterial() {
+        return componenteMaterial;
+    }
+
+    public void setComponenteMaterial(int componenteMaterial) {
+        this.componenteMaterial = componenteMaterial;
+    }
+
+    public String getDescripcionDelComponenteMaterial() {
+        return descripcionDelComponenteMaterial;
+    }
+
+    public void setDescripcionDelComponenteMaterial(String descripcionDelComponenteMaterial) {
+        this.descripcionDelComponenteMaterial = descripcionDelComponenteMaterial;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getaMayorNivel() {
+        return aMayorNivel;
     }
 
     public void setaMayorNivel(String aMayorNivel) {

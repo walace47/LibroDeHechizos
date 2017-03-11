@@ -38,16 +38,16 @@ public final class OperacionesBD {
         String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s",
                 Tablas.PERSONAJE,
                 Tablas.CLASE,
-                Tablas.PERSONAJE+"."+Personajes.ID_CLASE,
-                Tablas.CLASE+"."+Clases.ID_CLASE,
+                Tablas.PERSONAJE + "." + Personajes.ID_CLASE,
+                Tablas.CLASE + "." + Clases.ID_CLASE,
                 Tablas.RAZA,
-                Tablas.PERSONAJE+"."+Personajes.ID_RAZA,
-                Tablas.RAZA+"."+Razas.ID_RAZA);
+                Tablas.PERSONAJE + "." + Personajes.ID_RAZA,
+                Tablas.RAZA + "." + Razas.ID_RAZA);
         String[] proyeccion = {
                 Personajes.ID_PERSONAJE,
                 Tablas.PERSONAJE + "." + Personajes.NOMBRE,
-                Tablas.CLASE + "." + Clases.NOMBRE+" AS "+Tablas.CLASE,
-                Tablas.RAZA + "." + Razas.NOMBRE+" AS "+Tablas.RAZA};
+                Tablas.CLASE + "." + Clases.NOMBRE + " AS " + Tablas.CLASE,
+                Tablas.RAZA + "." + Razas.NOMBRE + " AS " + Tablas.RAZA};
 
         builder.setTables(tablas);
         Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
@@ -101,6 +101,33 @@ public final class OperacionesBD {
         return idResultado;
     }
 
+    public Cursor obtenerHechizos() {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = Tablas.HECHIZOS;
+        String[] proyeccion = {
+                    Hechizos.ID_HECHIZO,
+                    Hechizos.NOMBRE,
+                    Hechizos.DESCRIPCION,
+                    Hechizos.A_MAYOR_NIVEL,
+                    Hechizos.RANGO,
+                    Hechizos.COMPONENTE_VERBAL,
+                    Hechizos.COMPONENTE_SOMATICO,
+                    Hechizos.COMPONENTE_MATERIAL,
+                    Hechizos.DESCRIPCION_COMPONENTE,
+                    Hechizos.RITUAL,
+                    Hechizos.CONCENTRACION,
+                    Hechizos.TIEMPO_DE_CASTEO,
+                    Hechizos.ESCUELA,
+                    Hechizos.NIVEL,
+                    Hechizos.DURACION
+        };
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
+
+        return resultado;
+    }
+
     public Cursor obtenerRazas() {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -113,6 +140,33 @@ public final class OperacionesBD {
         Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
 
         return resultado;
+    }
+
+    public Cursor obtenerPersonaje(String id) {
+        //int idPerosonaje=Integer.parseInt(id);
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        String selection = String.format("%s=?", Personajes.ID_PERSONAJE);
+        String[] selectionArgs = {id};
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s",
+                Tablas.PERSONAJE,
+                Tablas.CLASE,
+                Tablas.PERSONAJE + "." + Personajes.ID_CLASE,
+                Tablas.CLASE + "." + Clases.ID_CLASE,
+                Tablas.RAZA,
+                Tablas.PERSONAJE + "." + Personajes.ID_RAZA,
+                Tablas.RAZA + "." + Razas.ID_RAZA);
+        String[] proyeccion = {
+                Personajes.ID_PERSONAJE,
+                Tablas.PERSONAJE + "." + Personajes.NOMBRE,
+                Tablas.CLASE + "." + Clases.NOMBRE + " AS " + Tablas.CLASE,
+                Tablas.RAZA + "." + Razas.NOMBRE + " AS " + Tablas.RAZA};
+
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, selection, selectionArgs, null, null, null);
+
+        return resultado;
+
     }
 
     public long insertarRaza(Raza raza) {
