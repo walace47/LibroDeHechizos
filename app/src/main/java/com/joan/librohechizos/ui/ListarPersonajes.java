@@ -27,6 +27,7 @@ public class ListarPersonajes extends AppCompatActivity {
     private ArrayList<Personaje> lista;
     private OperacionesBD datos;
     private ListView listaPersonajes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +36,18 @@ public class ListarPersonajes extends AppCompatActivity {
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
         lista=new ArrayList<Personaje>();
         listaPersonajes = (ListView) findViewById(R.id.list_personajes);
+        listaPersonajes.setAdapter(new AdaptadorPersonaje(ListarPersonajes.this,lista));
+
         cargarPersonajes();
 
         //metodo que se ejecuta cuando se clikea un personaje
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(ListarPersonajes.this,lista.get(i).getNombre(), Toast.LENGTH_LONG).show();
-                adapterView.getSelectedItem();
+                Intent intent = new Intent(ListarPersonajes.this, LibroDeHechizos.class);
+                startActivity(intent);
+                //Toast.makeText(ListarPersonajes.this,lista.get(i).getNombre(), Toast.LENGTH_LONG).show();
+
 
             }
 
@@ -70,7 +75,7 @@ public class ListarPersonajes extends AppCompatActivity {
                 });
                 dialogo1.show();
 
-                return false;
+                return true;
             }
         });
 
@@ -81,8 +86,9 @@ public class ListarPersonajes extends AppCompatActivity {
 
     private void cargarPersonajes(){
         obtenerPersonajes();
-        AdaptadorPersonaje adaptador = new AdaptadorPersonaje(this,lista);
-        listaPersonajes.setAdapter(adaptador);
+        AdaptadorPersonaje adp=(AdaptadorPersonaje) listaPersonajes.getAdapter();
+        adp.notifyDataSetChanged();
+        //listaPersonajes.setAdapter(adaptador);
 
     }
 
@@ -104,9 +110,7 @@ public class ListarPersonajes extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
-    public void btnEliminarPersonaje(View v,int i){
 
-    }
 
     private void obtenerPersonajes(){
         Cursor listaPersonajes = datos.obtenerPersonajes();

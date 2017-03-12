@@ -21,7 +21,7 @@ public class Hechizo {
     private String descripcion;
     private String aMayorNivel;
 
-    public Hechizo(String idHechizo, String nombre, int rango, int nivel, String escuela, String tiempoDeCasteo, String duracion, int concentracion, int ritual, int componenteVerbal, int componenteSomatico, int componenteMaterial, String descripcionDelComponenteMaterial, String descripcion, String aMayorNivel) {
+    public Hechizo(String idHechizo, String nombre,String descripcion,String aMayorNivel, int rango,int componenteVerbal, int componenteSomatico, int componenteMaterial,  String descripcionDelComponenteMaterial, int ritual, int concentracion,  String tiempoDeCasteo, String escuela, int nivel, String duracion) {
         this.idHechizo = idHechizo;
         this.nombre = nombre;
         this.rango = rango;

@@ -22,7 +22,7 @@
             android:label="@string/activity_crear_personaje"
             android:parentActivityName=".ui.ListarPersonajes" />
         <activity android:name=".ui.MostrarHechizo" />
-        <activity android:name=".ui.ListarHechizos"></activity>
+        <activity android:name=".ui.LibroDeHechizos"></activity>
     </application>
 
 </manifest>

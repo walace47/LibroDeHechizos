@@ -223,8 +223,9 @@ public final class OperacionesBD {
             Log.d("Raza nueva", "ID: " + idRaza);
             idRaza = insertarRaza(new Raza("", "Genazi"));
             Log.d("Raza nueva", "ID: " + idRaza);
-            long idPersonaje = insertarPersonaje(new Personaje("", "Leonidas", "1", "1"));
+           long idPersonaje = insertarPersonaje(new Personaje("", "Leonidas", "1", "1"));
             Log.d("Personaje nuevo", "ID: " + idPersonaje);
+            getDb().execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Zancada arbórea [Tree Stride]', 'Adquieres la habilidad de entrar en un árbol y moverte desde dentro del mismo hasta dentro de otro árbol del mismo tipo que se encuentre hasta a 500 pies (100 casillas, 150 m). Los dos árboles deben estar vivos y al menos tan grandes como tú. Debes usar 5 pies (1 casilla, 1.5m) de movimiento para entrar en el árbol. Conoces instantáneamente la localización de todos los árboles del mismo tipo a 500 pies (100 casillas, 150 m) de distancia y, como parte del movimiento usado para entrar en el árbol, puedes pasar dentro de uno de esos árboles o salir del árbol en el que estás. Apareces en un punto de tu elección a 5 pies (1 casilla, 1.5 m) del árbol destino, usando otros 5 pies (1 casilla, 1.5 m) de movimiento. Si no tienes suficiente movimiento, apareces a 5 pies (1 casilla, 1.5 m) del árbol en el que has entrado. Puedes usar esta habilidad de transporte una vez por asalto durante la duración. Debes terminar cada turno fuera de un árbol.', '', 0, 1, 1, 0, '', 0, 1, '1 acción', 'Conjuración', 5, 'hasta 1 minuto')");
             getDb().setTransactionSuccessful();
         } finally {
             getDb().endTransaction();

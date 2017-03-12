@@ -8,39 +8,36 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.joan.librohechizos.R;
+import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.modelo.Personaje;
 
 import java.util.ArrayList;
 
 /**
- * Created by Joan on 10/03/2017.
+ * Created by Joan on 11/03/2017.
  */
-public class AdaptadorPersonaje extends ArrayAdapter<Personaje> {
+
+public class AdaptadorHechizo extends ArrayAdapter<Hechizo> {
 
     AppCompatActivity appCompatActivity;
-    ArrayList<Personaje> lista;
+    ArrayList<Hechizo> lista;
 
-   public  AdaptadorPersonaje(AppCompatActivity context, ArrayList<Personaje> lista) {
-        super(context, R.layout.icono_personaje, lista);
+    public AdaptadorHechizo(AppCompatActivity context, ArrayList<Hechizo> lista) {
+        super(context, R.layout.icono_hechizo, lista);
         this.lista=lista;
         appCompatActivity = context;
     }
-    @Override
+
     public View getView(int position, View convertView, ViewGroup parent) {
         View item = convertView;
         LayoutInflater inflater = appCompatActivity.getLayoutInflater();
-        item=inflater.inflate(R.layout.icono_personaje,null);
-        TextView nombre = (TextView) item.findViewById(R.id.txt_personaje_nombre);
+        item=inflater.inflate(R.layout.icono_hechizo,null);
+        TextView nombre = (TextView) item.findViewById(R.id.txt_mostrar_nombre_hechizo);
         nombre.setText(lista.get(position).getNombre());
-        TextView clase = (TextView) item.findViewById(R.id.txt_clase);
-        clase.setText(lista.get(position).getIdClase());
-        TextView raza = (TextView) item.findViewById(R.id.txt_raza);
-        raza.setText(lista.get(position).getIdRaza());
+        TextView clase = (TextView) item.findViewById(R.id.txt_hechizo_escuela);
+        clase.setText(lista.get(position).getEscuela());
+        TextView raza = (TextView) item.findViewById(R.id.txt_hechizo_nivel);
+        raza.setText("nivel: "+lista.get(position).getNivel());
         return item;
     }
-
-
-
-
 }
-
