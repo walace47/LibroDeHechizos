@@ -119,7 +119,8 @@ public class ListarPersonajes extends AppCompatActivity {
         lista.clear();
         try {
             while (listaPersonajes!=null && listaPersonajes.moveToNext()) {
-                lista.add(new Personaje(listaPersonajes.getString(0),listaPersonajes.getString(1),listaPersonajes.getString(2),listaPersonajes.getString(3)));
+                lista.add(new Personaje(listaPersonajes.getString(0),listaPersonajes.getString(1),
+                        listaPersonajes.getString(2),listaPersonajes.getString(3)));
             }
         }finally {
             listaPersonajes.close();

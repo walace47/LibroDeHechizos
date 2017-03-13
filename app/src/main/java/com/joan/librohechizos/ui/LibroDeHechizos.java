@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Clase;
@@ -30,7 +29,7 @@ public class LibroDeHechizos extends AppCompatActivity {
     ArrayList<Hechizo> listaAprendidos;
     ArrayList<Hechizo> listaPreparados;
     ArrayList<Hechizo> listaTodos;
-    ListView vistaTodos,vistaAprendidos,vistaPrepado;
+    ListView vistaTodos, vistaAprendidos, vistaPreparado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,59 +57,42 @@ public class LibroDeHechizos extends AppCompatActivity {
         TbH.addTab(aprendidos);
         TbH.addTab(preparados);
 
-        this.personaje=(Personaje)ComunicadorDeObjetos.getMensaje();
-        listaTodos=new ArrayList<>();
-        listaAprendidos=new ArrayList<>();
+        //las 3 vistas de las listas
+        vistaTodos = (ListView) findViewById(R.id.list_hechizos);
+        vistaAprendidos = (ListView) findViewById(R.id.list_aprendidos);
+        vistaPreparado = (ListView) findViewById(R.id.list_preparados);
+
+        //el personaje de libro de hechizos
+        this.personaje = (Personaje) ComunicadorDeObjetos.getMensaje();
+
+        //Creacion de listas de Hechizos
+        listaTodos = new ArrayList<>();
+        listaAprendidos = new ArrayList<>();
+        listaPreparados = new ArrayList<>();
         listarTodoLosHechizos();
         listarHechizosAprendidos();
-        vistaTodos = (ListView) findViewById(R.id.list_hechizos);
-        vistaAprendidos=(ListView) findViewById(R.id.list_aprendidos);
-        if (!listaTodos.isEmpty()) {
-            vistaTodos.setAdapter(new AdaptadorHechizo(this, listaTodos));
-        }
+        listarHechizosPreparados();
+
+        //seteando adaptadores de la vista
+        vistaTodos.setAdapter(new AdaptadorHechizo(this, listaTodos));
         vistaAprendidos.setAdapter(new AdaptadorHechizo(this, listaAprendidos));
+        vistaPreparado.setAdapter(new AdaptadorHechizo(this, listaPreparados));
+
+        //agregando funcionalidad cuando se clikean los items
         agregarFuncionalidadMostrarHechizoClick(vistaTodos);
         agregarFuncionalidadMostrarHechizoClick(vistaAprendidos);
-        agregarFuncionalidadLongClickTodo(vistaTodos);
+        agregarFuncionalidadMostrarHechizoClick(vistaPreparado);
+        agregarFuncionalidadLongClickTodo();
+        agregarFuncionalidadLongclikAprendido();
 
 
     }
 
-    private void listarHechizosAprendidos(){
-        Cursor listaHechizos = datos.obtenerHechizoAprendido(personaje.getIdPersonaje());
-        listaAprendidos.clear();
-        try {
-            while (listaHechizos != null && listaHechizos.moveToNext()) {
-                Cursor listarClases=datos.obtenerClasesDeHechizo(listaHechizos.getString(0));
-                ArrayList<Clase> listaClase= new ArrayList<>();
-                while(listarClases!=null && listarClases.moveToNext()){
-                    listaClase.add(new Clase(listarClases.getString(0),listarClases.getString(1)));
-                }
-                Cursor escuela= datos.obtenerEscuela(listaHechizos.getString(12));
-                Escuela esc=new Escuela("","");
-                escuela.moveToNext();
-                if (escuela!=null){
-                    esc.setIdEscuela(escuela.getString(0));
-                    esc.setNombre(escuela.getString(1));
-                }
-
-                listaAprendidos.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1), listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4), listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8), listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), esc, listaHechizos.getInt(13), listaHechizos.getString(14),listaClase));
-                listarClases.close();
-                escuela.close();
-            }
-        } finally {
-            listaHechizos.close();
-
-
-        }
-
-    }
-
-    private void agregarFuncionalidadLongClickTodo(ListView vista){
-        vista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+    private void agregarFuncionalidadLongClickTodo() {
+        vistaTodos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int i, long l) {
-                final int posicion=i;
+                final int posicion = i;
 
                 AlertDialog.Builder dialogo1 = new AlertDialog.Builder(LibroDeHechizos.this);
                 dialogo1.setTitle("Agregar Hechizo");
@@ -118,12 +100,23 @@ public class LibroDeHechizos extends AppCompatActivity {
                 dialogo1.setCancelable(false);
                 dialogo1.setPositiveButton("Aprender", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
-                        AdaptadorHechizo adapter=(AdaptadorHechizo) vistaTodos.getAdapter();
-                        datos.aprenderHechizo(adapter.getListaActual().get(i).getIdHechizo(),personaje.getIdPersonaje());
-                        listarHechizosAprendidos();
-                        adapter=(AdaptadorHechizo) vistaAprendidos.getAdapter();
-                        adapter.notifyDataSetChanged();
+                        AdaptadorHechizo adapter = (AdaptadorHechizo) vistaTodos.getAdapter();
+                        String idHechizo = adapter.getListaActual().get(i).getIdHechizo();
+                        if (!datos.estaAprendido(personaje.getIdPersonaje(), idHechizo)) {
+                            try {
+                                datos.getDb().beginTransaction();
+                                datos.insertarHechizoAprendido(idHechizo, personaje.getIdPersonaje());
+                                datos.getDb().setTransactionSuccessful();
 
+
+                            } finally {
+                                datos.getDb().endTransaction();
+                            }
+                            listarHechizosAprendidos();
+                            adapter = (AdaptadorHechizo) vistaAprendidos.getAdapter();
+                            adapter.notifyDataSetChanged();
+
+                        }
                     }
                 });
                 dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -137,12 +130,70 @@ public class LibroDeHechizos extends AppCompatActivity {
         });
     }
 
-    private void agregarFuncionalidadMostrarHechizoClick(ListView vista){
+    private void agregarFuncionalidadLongclikAprendido() {
+        vistaAprendidos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int i, long l) {
+                final int posicion = i;
+
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(LibroDeHechizos.this);
+                dialogo1.setTitle("Preparar o Eliminar Hechizo");
+                dialogo1.setMessage("¿ Que desea hacer con el hechizo ?");
+                //dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton("Preparar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        AdaptadorHechizo adapter = (AdaptadorHechizo) vistaAprendidos.getAdapter();
+                        try {
+                            datos.getDb().beginTransaction();
+                            datos.prepararHechizo(personaje.getIdPersonaje(), adapter.getListaActual().get(i).getIdHechizo());
+                            datos.getDb().setTransactionSuccessful();
+                        } finally {
+                            datos.getDb().endTransaction();
+                            listarHechizosPreparados();
+                            listarHechizosAprendidos();
+                            adapter.notifyDataSetChanged();
+                            adapter = (AdaptadorHechizo) vistaPreparado.getAdapter();
+                            adapter.notifyDataSetChanged();
+
+                        }
+
+
+                    }
+                });
+                dialogo1.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        AdaptadorHechizo adapter = (AdaptadorHechizo) vistaAprendidos.getAdapter();
+                        try {
+                            datos.getDb().beginTransaction();
+                            datos.eliminarHechizoAprendido(personaje.getIdPersonaje(), adapter.getListaActual().get(i).getIdHechizo());
+                            datos.getDb().setTransactionSuccessful();
+                        } finally {
+                            datos.getDb().endTransaction();
+                            listarHechizosPreparados();
+                            listarHechizosAprendidos();
+                            adapter.notifyDataSetChanged();
+                            adapter = (AdaptadorHechizo) vistaPreparado.getAdapter();
+                            adapter.notifyDataSetChanged();
+
+                        }
+
+
+                    }
+                });
+                dialogo1.show();
+
+
+                return true;
+            }
+        });
+    }
+
+    private void agregarFuncionalidadMostrarHechizoClick(ListView vista) {
         vista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ComunicadorDeObjetos.setMensaje(listaTodos.get(i));
-                Intent intent = new Intent(LibroDeHechizos.this,MostrarHechizo.class);
+                Intent intent = new Intent(LibroDeHechizos.this, MostrarHechizo.class);
                 startActivity(intent);
 
             }
@@ -150,26 +201,92 @@ public class LibroDeHechizos extends AppCompatActivity {
         });
     }
 
-
-    public void listarTodoLosHechizos() {
-        Cursor listaHechizos = datos.obtenerHechizos();
-        listaTodos.clear();
+    private void listarHechizosAprendidos() {
+        listaAprendidos.clear();
+        Cursor listaHechizos = datos.obtenerHechizoAprendido(personaje.getIdPersonaje());
         try {
             while (listaHechizos != null && listaHechizos.moveToNext()) {
-                Cursor listarClases=datos.obtenerClasesDeHechizo(listaHechizos.getString(0));
-                ArrayList<Clase> listaClase= new ArrayList<>();
-                while(listarClases!=null && listarClases.moveToNext()){
-                    listaClase.add(new Clase(listarClases.getString(0),listarClases.getString(1)));
+                Cursor listarClases = datos.obtenerClasesDeHechizo(listaHechizos.getString(0));
+                ArrayList<Clase> listaClase = new ArrayList<>();
+                while (listarClases != null && listarClases.moveToNext()) {
+                    listaClase.add(new Clase(listarClases.getString(0), listarClases.getString(1)));
                 }
-                Cursor escuela= datos.obtenerEscuela(listaHechizos.getString(12));
-                Escuela esc=new Escuela("","");
-                escuela.moveToNext();
-                if (escuela!=null){
+                Cursor escuela = datos.obtenerEscuela(listaHechizos.getString(12));
+                Escuela esc = new Escuela("", "");
+                if (escuela.moveToNext()) {
                     esc.setIdEscuela(escuela.getString(0));
                     esc.setNombre(escuela.getString(1));
                 }
 
-                listaTodos.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1), listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4), listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8), listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), esc, listaHechizos.getInt(13), listaHechizos.getString(14),listaClase));
+                listaAprendidos.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1),
+                        listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4),
+                        listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8),
+                        listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), esc, listaHechizos.getInt(13),
+                        listaHechizos.getString(14), listaClase));
+                listarClases.close();
+                escuela.close();
+            }
+        } finally {
+            listaHechizos.close();
+
+
+        }
+
+    }
+
+    private void listarHechizosPreparados() {
+        listaPreparados.clear();
+        Cursor listaHechizos = datos.obtenerHechizoPreparado(personaje.getIdPersonaje());
+        try {
+            while (listaHechizos != null && listaHechizos.moveToNext()) {
+                //obtenga las clases que pueden aprender este hechizo
+                Cursor listarClases = datos.obtenerClasesDeHechizo(listaHechizos.getString(0));
+                ArrayList<Clase> listaClase = new ArrayList<>();
+                while (listarClases != null && listarClases.moveToNext()) {
+                    listaClase.add(new Clase(listarClases.getString(0), listarClases.getString(1)));
+                }
+                //obtengo la escuela del hechizo
+                Cursor escuela = datos.obtenerEscuela(listaHechizos.getString(12));
+                Escuela esc = new Escuela("", "");
+                if (escuela.moveToNext()) {
+                    esc.setIdEscuela(escuela.getString(0));
+                    esc.setNombre(escuela.getString(1));
+                }
+                // obtengo el resto de los datos
+                listaPreparados.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1),
+                        listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4),
+                        listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8),
+                        listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), esc, listaHechizos.getInt(13),
+                        listaHechizos.getString(14), listaClase));
+                listarClases.close();
+                escuela.close();
+            }
+        } finally {
+            listaHechizos.close();
+
+
+        }
+    }
+
+    private void listarTodoLosHechizos() {
+        Cursor listaHechizos = datos.obtenerHechizos();
+        listaTodos.clear();
+        try {
+            while (listaHechizos != null && listaHechizos.moveToNext()) {
+                Cursor listarClases = datos.obtenerClasesDeHechizo(listaHechizos.getString(0));
+                ArrayList<Clase> listaClase = new ArrayList<>();
+                while (listarClases != null && listarClases.moveToNext()) {
+                    listaClase.add(new Clase(listarClases.getString(0), listarClases.getString(1)));
+                }
+                Cursor escuela = datos.obtenerEscuela(listaHechizos.getString(12));
+                Escuela esc = new Escuela("", "");
+                escuela.moveToNext();
+                if (escuela != null) {
+                    esc.setIdEscuela(escuela.getString(0));
+                    esc.setNombre(escuela.getString(1));
+                }
+
+                listaTodos.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1), listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4), listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8), listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), esc, listaHechizos.getInt(13), listaHechizos.getString(14), listaClase));
                 listarClases.close();
                 escuela.close();
             }

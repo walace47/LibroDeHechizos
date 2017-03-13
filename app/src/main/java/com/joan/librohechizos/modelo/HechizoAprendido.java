@@ -4,12 +4,12 @@ package com.joan.librohechizos.modelo;
  * Created by Joan on 08/03/2017.
  */
 
-public class HechizosAprendidos {
+public class HechizoAprendido {
     private String idPersonaje;
     private String idHechizo;
     private boolean preparado;
 
-    public HechizosAprendidos(String idPersonaje, String idHechizo, boolean preparado) {
+    public HechizoAprendido(String idPersonaje, String idHechizo, boolean preparado) {
         this.idPersonaje = idPersonaje;
         this.idHechizo = idHechizo;
         this.preparado = preparado;

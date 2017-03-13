@@ -163,10 +163,11 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
                 Clases.ID_CLASE,Hechizos.ID_HECHIZO));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER NOT NULL %s, " +
-                        "%s INTEGER NOT NULL %s, PRIMARY KEY(%s,%s))",
+                        "%s INTEGER NOT NULL %s, %s INTEGER NOT NULL , PRIMARY KEY(%s,%s))",
                 Tablas.HECHIZOS_APRENDIDOS,
-                Personajes.ID_PERSONAJE, Referencias.ID_PERSONAJE,
-                Hechizos.ID_HECHIZO,Referencias.ID_HECHIZOS,
+                HechizosAprendidos.ID_PERSONAJE, Referencias.ID_PERSONAJE,
+                HechizosAprendidos.ID_HECHIZO,Referencias.ID_HECHIZOS,
+                HechizosAprendidos.PREPARADO,
                 Personajes.ID_PERSONAJE, Hechizos.ID_HECHIZO));
         precargarDatos(db);
 

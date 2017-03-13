@@ -62,6 +62,9 @@ public class Contratos {
     public static class Escuelas implements ColumnaEscuela{
 
     }
+    public static class HechizosAprendidos implements ColumnasHechizosAprendidos{
+
+    }
 
     public static class Personajes implements ColumnasPersonaje {
         public static String generarIdPersonaje() {

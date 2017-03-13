@@ -223,6 +223,38 @@ public final class OperacionesBD {
         return resultado;
     }
 
+    public Cursor obtenerHechizoPreparado(String idPersonaje){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s",
+                Tablas.PERSONAJE,Tablas.HECHIZOS_APRENDIDOS,Tablas.PERSONAJE+"."+Personajes.ID_PERSONAJE,
+                Tablas.HECHIZOS_APRENDIDOS+"."+Personajes.ID_PERSONAJE,
+                Tablas.HECHIZOS,Tablas.HECHIZOS_APRENDIDOS+"."+Hechizos.ID_HECHIZO,Tablas.HECHIZOS+"."+Hechizos.ID_HECHIZO);
+        String[] proyeccion = {
+                Tablas.HECHIZOS+"."+Hechizos.ID_HECHIZO+" AS "+Tablas.HECHIZOS,
+                Tablas.HECHIZOS+"."+Hechizos.NOMBRE,
+                Tablas.HECHIZOS+"."+Hechizos.DESCRIPCION,
+                Tablas.HECHIZOS+"."+Hechizos.A_MAYOR_NIVEL,
+                Tablas.HECHIZOS+"."+Hechizos.RANGO,
+                Tablas.HECHIZOS+"."+Hechizos.COMPONENTE_VERBAL,
+                Tablas.HECHIZOS+"."+Hechizos.COMPONENTE_SOMATICO,
+                Tablas.HECHIZOS+"."+Hechizos.COMPONENTE_MATERIAL,
+                Tablas.HECHIZOS+"."+Hechizos.DESCRIPCION_COMPONENTE,
+                Tablas.HECHIZOS+"."+Hechizos.RITUAL,
+                Tablas.HECHIZOS+"."+Hechizos.CONCENTRACION,
+                Tablas.HECHIZOS+"."+Hechizos.TIEMPO_DE_CASTEO,
+                Tablas.HECHIZOS+"."+ Hechizos.ESCUELA,
+                Tablas.HECHIZOS+"."+ Hechizos.NIVEL,
+                Tablas.HECHIZOS+"."+ Hechizos.DURACION
+        };
+        String seleccion=String.format("%s=? AND %s=1",Tablas.PERSONAJE+"."+Personajes.ID_PERSONAJE,HechizosAprendidos.PREPARADO);
+        String[] seleccionArg={idPersonaje};
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, null);
+
+        return resultado;
+    }
+
     public long insertarRaza(Raza raza) {
         ContentValues valores = new ContentValues();
         valores.put(Razas.NOMBRE, raza.getNombre());
@@ -239,15 +271,24 @@ public final class OperacionesBD {
         return idResultado;
     }
 
-    public void aprenderHechizo(String idHechizo ,String idPersonaje){
+    public void insertarHechizoAprendido(String idHechizo , String idPersonaje){
         ContentValues valores = new ContentValues();
-        int id= Integer.parseInt(idPersonaje);
         valores.put(Personajes.ID_PERSONAJE,idPersonaje);
-        id=Integer.parseInt(idHechizo);
         valores.put(Hechizos.ID_HECHIZO,idHechizo);
+        valores.put(HechizosAprendidos.PREPARADO,0);
         getDb().insertOrThrow(Tablas.HECHIZOS_APRENDIDOS,null,valores);
 
     }
+
+    public void prepararHechizo(String idPersonaje,String idHechizo){
+        SQLiteDatabase db = baseDatos.getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put(HechizosAprendidos.PREPARADO, 1);
+        String whereClause = String.format("%s=? AND %s=?",HechizosAprendidos.ID_PERSONAJE,HechizosAprendidos.ID_HECHIZO );
+        String[] whereArgs = {idPersonaje,idHechizo};
+
+        db.update(Tablas.HECHIZOS_APRENDIDOS, valores, whereClause, whereArgs);
+}
 
     public void eliminarPersonaje(String idPersonaje){
         SQLiteDatabase db = baseDatos.getWritableDatabase();
@@ -256,6 +297,26 @@ public final class OperacionesBD {
         db.delete(Tablas.PERSONAJE, whereClause, whereArgs);
     }
 
+    public void eliminarHechizoAprendido(String idPersonaje, String idHechizo){
+        SQLiteDatabase db = baseDatos.getWritableDatabase();
+        String whereClause=String.format("%s=? AND %s=?",HechizosAprendidos.ID_PERSONAJE,HechizosAprendidos.ID_HECHIZO);
+        String[] whereArgs = {idPersonaje,idHechizo};
+        db.delete(Tablas.HECHIZOS_APRENDIDOS, whereClause, whereArgs);
+
+    }
+
+    public boolean estaAprendido(String idPersonaje,String idHechizo){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String[] columns = { HechizosAprendidos.ID_HECHIZO,HechizosAprendidos.ID_PERSONAJE };
+        String selection = HechizosAprendidos.ID_HECHIZO+ " =? AND "+HechizosAprendidos.ID_PERSONAJE +"=?";
+        String[] selectionArgs = { idHechizo,idPersonaje };
+        String limit = "1";
+        Cursor cursor = db.query(Tablas.HECHIZOS_APRENDIDOS, columns, selection, selectionArgs, null, null, null, limit);
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+    }
 
 
     public SQLiteDatabase getDb() {
