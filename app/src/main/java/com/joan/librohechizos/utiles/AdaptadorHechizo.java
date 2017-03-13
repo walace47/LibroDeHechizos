@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Hechizo;
-import com.joan.librohechizos.modelo.Personaje;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class AdaptadorHechizo extends ArrayAdapter<Hechizo> {
 
     public AdaptadorHechizo(AppCompatActivity context, ArrayList<Hechizo> lista) {
         super(context, R.layout.icono_hechizo, lista);
-        this.lista=lista;
+        this.lista =lista;
         appCompatActivity = context;
     }
 
@@ -37,7 +36,7 @@ public class AdaptadorHechizo extends ArrayAdapter<Hechizo> {
         TextView clase = (TextView) item.findViewById(R.id.txt_hechizo_escuela);
         clase.setText(lista.get(position).getEscuela());
         TextView raza = (TextView) item.findViewById(R.id.txt_hechizo_nivel);
-        raza.setText("nivel: "+lista.get(position).getNivel());
+        raza.setText("nivel: "+ lista.get(position).getNivel());
         return item;
     }
 }

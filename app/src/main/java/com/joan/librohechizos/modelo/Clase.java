@@ -1,5 +1,8 @@
 package com.joan.librohechizos.modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Giuliano on 07/03/2017.
  */
@@ -33,4 +36,5 @@ public class Clase {
     public String toString(){
         return this.nombre;
     }
+
 }

@@ -1,10 +1,15 @@
 package com.joan.librohechizos.modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
+
 /**
  * Created by Joan on 08/03/2017.
  */
 
-public class Hechizo {
+public class Hechizo  {
     private String idHechizo;
     private String nombre;
     private int rango;
@@ -20,8 +25,12 @@ public class Hechizo {
     private String descripcionDelComponenteMaterial;
     private String descripcion;
     private String aMayorNivel;
+    private ArrayList<Clase> clases;
 
-    public Hechizo(String idHechizo, String nombre,String descripcion,String aMayorNivel, int rango,int componenteVerbal, int componenteSomatico, int componenteMaterial,  String descripcionDelComponenteMaterial, int ritual, int concentracion,  String tiempoDeCasteo, String escuela, int nivel, String duracion) {
+    public Hechizo(String idHechizo, String nombre,String descripcion,String aMayorNivel,
+                   int rango,int componenteVerbal, int componenteSomatico, int componenteMaterial,
+                   String descripcionDelComponenteMaterial, int ritual, int concentracion,  String tiempoDeCasteo,
+                   String escuela, int nivel, String duracion, ArrayList<Clase> clases) {
         this.idHechizo = idHechizo;
         this.nombre = nombre;
         this.rango = rango;
@@ -37,6 +46,7 @@ public class Hechizo {
         this.descripcionDelComponenteMaterial = descripcionDelComponenteMaterial;
         this.descripcion = descripcion;
         this.aMayorNivel = aMayorNivel;
+        this.clases=clases;
     }
 
     public String getIdHechizo() {
@@ -157,5 +167,13 @@ public class Hechizo {
 
     public void setaMayorNivel(String aMayorNivel) {
         this.aMayorNivel = aMayorNivel;
+    }
+
+    public ArrayList<Clase> getClases() {
+        return clases;
+    }
+
+    public void setClases(ArrayList<Clase> clases) {
+        this.clases = clases;
     }
 }

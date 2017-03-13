@@ -1,16 +1,20 @@
 package com.joan.librohechizos.ui;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
 import com.joan.librohechizos.R;
+import com.joan.librohechizos.modelo.Clase;
 import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorHechizo;
+import com.joan.librohechizos.utiles.ComunicadorDeObjetos;
 
 import java.util.ArrayList;
 
@@ -18,6 +22,10 @@ public class LibroDeHechizos extends AppCompatActivity {
     private String idPersonaje;
     TabHost TbH;
     private OperacionesBD datos;
+    ArrayList<Hechizo> listaAprendidos;
+    ArrayList<Hechizo> listaPreparados;
+    ArrayList<Hechizo> listaTodos;
+    ListView vistaTodos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +52,27 @@ public class LibroDeHechizos extends AppCompatActivity {
         TbH.addTab(todos); //añadimos los tabs ya programados
         TbH.addTab(aprendidos);
         TbH.addTab(preparados);
-        ArrayList<Hechizo> lista = listarTodoLosHechizos();
-        ListView vista = (ListView) findViewById(R.id.list_hechizos);
-        if (!lista.isEmpty()) {
-            vista.setAdapter(new AdaptadorHechizo(this, lista));
+        listaTodos = listarTodoLosHechizos();
+        vistaTodos = (ListView) findViewById(R.id.list_hechizos);
+        if (!listaTodos.isEmpty()) {
+            vistaTodos.setAdapter(new AdaptadorHechizo(this, listaTodos));
         }
+        agregarFuncionalidadMostrarHechizoClick(vistaTodos);
 
 
+    }
+
+    private void agregarFuncionalidadMostrarHechizoClick(ListView vista){
+        vistaTodos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ComunicadorDeObjetos.setMensaje(listaTodos.get(i));
+                Intent intent = new Intent(LibroDeHechizos.this,MostrarHechizo.class);
+                startActivity(intent);
+
+            }
+
+        });
     }
 
 
@@ -59,7 +81,12 @@ public class LibroDeHechizos extends AppCompatActivity {
         ArrayList<Hechizo> lista = new ArrayList<>();
         try {
             while (listaHechizos != null && listaHechizos.moveToNext()) {
-                lista.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1), listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4), listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8), listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), listaHechizos.getString(12), listaHechizos.getInt(13), listaHechizos.getString(14)));
+                Cursor listarClases=datos.obtenerClasesDeHechizo(listaHechizos.getString(0));
+                ArrayList<Clase> listaClase= new ArrayList<>();
+                while(listarClases!=null && listarClases.moveToNext()){
+                    listaClase.add(new Clase(listarClases.getString(0),listarClases.getString(1)));
+                }
+                lista.add(new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1), listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4), listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8), listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), listaHechizos.getString(12), listaHechizos.getInt(13), listaHechizos.getString(14),listaClase));
             }
         } finally {
             listaHechizos.close();

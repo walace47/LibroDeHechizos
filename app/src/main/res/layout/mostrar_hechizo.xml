@@ -18,7 +18,7 @@
             android:foregroundTint="@color/colorPrimaryDark">
 
             <TextView
-                android:id="@+id/txt_clases"
+                android:id="@+id/txt_hechizo_clases"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="mostrar clases"
@@ -36,7 +36,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/txt_nombre"
+                android:id="@+id/txt_hechizo_nombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_span="0"
@@ -59,7 +59,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/escuela"
+                android:id="@+id/txt_hechizo_escuela_nivel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -161,7 +161,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/text_descripcion"
+                android:id="@+id/txt_descripcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/editbox_background"
@@ -176,7 +176,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/txt_a_mayor_nivel_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

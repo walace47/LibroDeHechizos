@@ -145,7 +145,6 @@ public final class OperacionesBD {
     }
 
     public Cursor obtenerPersonaje(String id) {
-        //int idPerosonaje=Integer.parseInt(id);
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         String selection = String.format("%s=?", Personajes.ID_PERSONAJE);
         String[] selectionArgs = {id};
@@ -171,6 +170,23 @@ public final class OperacionesBD {
 
     }
 
+    public Cursor obtenerClasesDeHechizo(String idHechizo){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String selection = String.format("%s=?", Tablas.HECHIZOS_POR_CLASE+"."+Hechizos.ID_HECHIZO);
+        String[] selectionArgs = {idHechizo};
+        String tablas = String.format("%s NATURAL JOIN %s",
+                Tablas.HECHIZOS_POR_CLASE,Tablas.CLASE);
+        String[] proyeccion = {
+                Clases.ID_CLASE,
+                Clases.NOMBRE};
+
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, selection,selectionArgs, null, null, null);
+
+        return resultado;
+    }
+
     public long insertarRaza(Raza raza) {
         ContentValues valores = new ContentValues();
         valores.put(Razas.NOMBRE, raza.getNombre());
@@ -184,6 +200,8 @@ public final class OperacionesBD {
         String[] whereArgs = {idPersonaje};
         db.delete(Tablas.PERSONAJE, whereClause, whereArgs);
     }
+
+
 
     public SQLiteDatabase getDb() {
         return baseDatos.getWritableDatabase();
