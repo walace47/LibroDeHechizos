@@ -14,7 +14,7 @@ public class Hechizo  {
     private String nombre;
     private int rango;
     private int nivel;
-    private String escuela;
+    private Escuela escuela;
     private String tiempoDeCasteo;
     private String duracion;
     private int concentracion;//es un boolean
@@ -30,7 +30,7 @@ public class Hechizo  {
     public Hechizo(String idHechizo, String nombre,String descripcion,String aMayorNivel,
                    int rango,int componenteVerbal, int componenteSomatico, int componenteMaterial,
                    String descripcionDelComponenteMaterial, int ritual, int concentracion,  String tiempoDeCasteo,
-                   String escuela, int nivel, String duracion, ArrayList<Clase> clases) {
+                   Escuela escuela, int nivel, String duracion, ArrayList<Clase> clases) {
         this.idHechizo = idHechizo;
         this.nombre = nombre;
         this.rango = rango;
@@ -81,11 +81,11 @@ public class Hechizo  {
         this.nivel = nivel;
     }
 
-    public String getEscuela() {
+    public Escuela getEscuela() {
         return escuela;
     }
 
-    public void setEscuela(String escuela) {
+    public void setEscuela(Escuela escuela) {
         this.escuela = escuela;
     }
 

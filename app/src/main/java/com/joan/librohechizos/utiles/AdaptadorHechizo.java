@@ -27,6 +27,10 @@ public class AdaptadorHechizo extends ArrayAdapter<Hechizo> {
         appCompatActivity = context;
     }
 
+    public  ArrayList<Hechizo> getListaActual(){
+        return this.lista;
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
         View item = convertView;
         LayoutInflater inflater = appCompatActivity.getLayoutInflater();
@@ -34,7 +38,7 @@ public class AdaptadorHechizo extends ArrayAdapter<Hechizo> {
         TextView nombre = (TextView) item.findViewById(R.id.txt_mostrar_nombre_hechizo);
         nombre.setText(lista.get(position).getNombre());
         TextView clase = (TextView) item.findViewById(R.id.txt_hechizo_escuela);
-        clase.setText(lista.get(position).getEscuela());
+        clase.setText(lista.get(position).getEscuela().getNombre());
         TextView raza = (TextView) item.findViewById(R.id.txt_hechizo_nivel);
         raza.setText("nivel: "+ lista.get(position).getNivel());
         return item;

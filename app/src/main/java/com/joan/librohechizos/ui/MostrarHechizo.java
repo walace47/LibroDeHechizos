@@ -39,18 +39,29 @@ public class MostrarHechizo extends AppCompatActivity {
             nombre.setText(nombre.getText() + "(RITUAL)");
         }
         rango = (TextView) findViewById(R.id.txt_rango);
-        rango.setText("RANGO: " + hechizo.getRango());
+        switch (hechizo.getRango()){
+            case(0):
+                rango.setText("RANGO: " +"A ti mismo");
+                break;
+            case(1):
+                rango.setText("RANGO: " +"Tocar");
+                break;
+            default:
+                rango.setText("RANGO: "+hechizo.getRango()+" pies");
+                break;
+
+        }
         nivelEscuela = (TextView) findViewById(R.id.txt_hechizo_escuela_nivel);
-        nivelEscuela.setText(hechizo.getEscuela() + " Nivel: " + hechizo.getNivel());
+        nivelEscuela.setText(hechizo.getEscuela().getNombre() + " Nivel: " + hechizo.getNivel());
         tiempoDeCasteo = (TextView) findViewById(R.id.txt_coste);
         tiempoDeCasteo.setText("CASTEO: " + hechizo.getTiempoDeCasteo());
         componentes = (TextView) findViewById(R.id.txt_componentes);
-        componentes.setText("");
+        componentes.setText("COMPONENTES: ");
         if (hechizo.getComponenteVerbal() == 1) {
-            componentes.setText("V");
+            componentes.setText(componentes.getText()+"V");
         }
         if (hechizo.getComponenteSomatico() == 1) {
-            if (!componentes.getText().equals("")) {
+            if (!componentes.getText().equals("COMPONENTES: ")) {
                 componentes.setText(componentes.getText() + ",");
             }
             componentes.setText(componentes.getText() + "S");
@@ -58,7 +69,7 @@ public class MostrarHechizo extends AppCompatActivity {
         }
         if (hechizo.getComponenteVerbal() == 1) {
 
-            if (!componentes.getText().equals("")) {
+            if (!componentes.getText().equals("COMPONENTES: ")) {
                 componentes.setText(componentes.getText() + ",");
             }
             componentes.setText(componentes.getText() + "M");

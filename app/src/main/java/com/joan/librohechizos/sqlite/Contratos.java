@@ -54,6 +54,14 @@ public class Contratos {
         String ID_HECHIZO="id_hechizo";
 
     }
+    interface ColumnaEscuela{
+        String ID_ESCUELA="id_escuela";
+        String NOMBRE="nombre";
+    }
+
+    public static class Escuelas implements ColumnaEscuela{
+
+    }
 
     public static class Personajes implements ColumnasPersonaje {
         public static String generarIdPersonaje() {

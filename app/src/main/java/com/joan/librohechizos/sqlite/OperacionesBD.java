@@ -27,7 +27,6 @@ public final class OperacionesBD {
     public static OperacionesBD obtenerInstancia(Context contexto) {
         if (baseDatos == null) {
             baseDatos = new LibroHechizosBD(contexto);
-            instancia.precargarDatos();
         }
         return instancia;
     }
@@ -71,14 +70,6 @@ public final class OperacionesBD {
         return resultado;
     }
 
-    public long insertarPersonaje(Personaje personaje) {
-        ContentValues valores = new ContentValues();
-        valores.put(Personajes.NOMBRE, personaje.getNombre());
-        valores.put(Personajes.ID_CLASE, personaje.getIdClase());
-        valores.put(Personajes.ID_RAZA, personaje.getIdRaza());
-        long idResultado = getDb().insertOrThrow(Tablas.PERSONAJE, null, valores);
-        return idResultado;
-    }
 
     public Cursor obtenerClases() {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
@@ -129,7 +120,6 @@ public final class OperacionesBD {
     }
 
 
-
     public Cursor obtenerRazas() {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -170,6 +160,20 @@ public final class OperacionesBD {
 
     }
 
+    public Cursor obtenerEscuela(String idEscuela){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas= Tablas.ESCUELA;
+        String[] proyeccion ={
+                Escuelas.ID_ESCUELA,
+                Escuelas.NOMBRE };
+        String seleccion= String.format("%s=?",Escuelas.ID_ESCUELA);
+        String[] seleccionArg={idEscuela};
+        builder.setTables(tablas);
+        Cursor resultado= builder.query(db,proyeccion,seleccion,seleccionArg,null,null,null);
+        return resultado;
+    }
+
     public Cursor obtenerClasesDeHechizo(String idHechizo){
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -187,11 +191,62 @@ public final class OperacionesBD {
         return resultado;
     }
 
+    public Cursor obtenerHechizoAprendido(String idPersonaje){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s",
+                Tablas.PERSONAJE,Tablas.HECHIZOS_APRENDIDOS,Tablas.PERSONAJE+"."+Personajes.ID_PERSONAJE,
+                Tablas.HECHIZOS_APRENDIDOS+"."+Personajes.ID_PERSONAJE,
+                Tablas.HECHIZOS,Tablas.HECHIZOS_APRENDIDOS+"."+Hechizos.ID_HECHIZO,Tablas.HECHIZOS+"."+Hechizos.ID_HECHIZO);
+        String[] proyeccion = {
+                Tablas.HECHIZOS+"."+Hechizos.ID_HECHIZO+" AS "+Tablas.HECHIZOS,
+                Tablas.HECHIZOS+"."+Hechizos.NOMBRE,
+                Tablas.HECHIZOS+"."+Hechizos.DESCRIPCION,
+                Tablas.HECHIZOS+"."+Hechizos.A_MAYOR_NIVEL,
+                Tablas.HECHIZOS+"."+Hechizos.RANGO,
+                Tablas.HECHIZOS+"."+Hechizos.COMPONENTE_VERBAL,
+                Tablas.HECHIZOS+"."+Hechizos.COMPONENTE_SOMATICO,
+                Tablas.HECHIZOS+"."+Hechizos.COMPONENTE_MATERIAL,
+                Tablas.HECHIZOS+"."+Hechizos.DESCRIPCION_COMPONENTE,
+                Tablas.HECHIZOS+"."+Hechizos.RITUAL,
+                Tablas.HECHIZOS+"."+Hechizos.CONCENTRACION,
+                Tablas.HECHIZOS+"."+Hechizos.TIEMPO_DE_CASTEO,
+                Tablas.HECHIZOS+"."+ Hechizos.ESCUELA,
+                Tablas.HECHIZOS+"."+ Hechizos.NIVEL,
+                Tablas.HECHIZOS+"."+ Hechizos.DURACION
+        };
+        String seleccion=String.format("%s=?",Tablas.PERSONAJE+"."+Personajes.ID_PERSONAJE);
+        String[] seleccionArg={idPersonaje};
+         builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, null);
+
+        return resultado;
+    }
+
     public long insertarRaza(Raza raza) {
         ContentValues valores = new ContentValues();
         valores.put(Razas.NOMBRE, raza.getNombre());
         long idResultado = getDb().insertOrThrow(Tablas.RAZA, null, valores);
         return idResultado;
+    }
+
+    public long insertarPersonaje(Personaje personaje) {
+        ContentValues valores = new ContentValues();
+        valores.put(Personajes.NOMBRE, personaje.getNombre());
+        valores.put(Personajes.ID_CLASE, personaje.getIdClase());
+        valores.put(Personajes.ID_RAZA, personaje.getIdRaza());
+        long idResultado = getDb().insertOrThrow(Tablas.PERSONAJE, null, valores);
+        return idResultado;
+    }
+
+    public void aprenderHechizo(String idHechizo ,String idPersonaje){
+        ContentValues valores = new ContentValues();
+        int id= Integer.parseInt(idPersonaje);
+        valores.put(Personajes.ID_PERSONAJE,idPersonaje);
+        id=Integer.parseInt(idHechizo);
+        valores.put(Hechizos.ID_HECHIZO,idHechizo);
+        getDb().insertOrThrow(Tablas.HECHIZOS_APRENDIDOS,null,valores);
+
     }
 
     public void eliminarPersonaje(String idPersonaje){
@@ -207,46 +262,5 @@ public final class OperacionesBD {
         return baseDatos.getWritableDatabase();
     }
 
-    public void precargarDatos() {
-        try {
-            getDb().beginTransaction();
-            long idClase = insertarClase(new Clase("", "Guerrero"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            idClase = insertarClase(new Clase("", "Paladin"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            idClase = insertarClase(new Clase("", "Clerigo"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            idClase = insertarClase(new Clase("", "Druida"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            idClase = insertarClase(new Clase("", "Hechizero"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            idClase = insertarClase(new Clase("", "Mago"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            idClase = insertarClase(new Clase("", "Brujo"));
-            Log.d("Clase nueva", "ID: " + idClase);
-            //se cargaron las clases
-            long idRaza = insertarRaza(new Raza("", "Humano"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Draconido"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Elfo"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Tieflin"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Gnomo"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Mediano"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Enano"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-            idRaza = insertarRaza(new Raza("", "Genazi"));
-            Log.d("Raza nueva", "ID: " + idRaza);
-           long idPersonaje = insertarPersonaje(new Personaje("", "Leonidas", "1", "1"));
-            Log.d("Personaje nuevo", "ID: " + idPersonaje);
-            getDb().execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Zancada arbórea [Tree Stride]', 'Adquieres la habilidad de entrar en un árbol y moverte desde dentro del mismo hasta dentro de otro árbol del mismo tipo que se encuentre hasta a 500 pies (100 casillas, 150 m). Los dos árboles deben estar vivos y al menos tan grandes como tú. Debes usar 5 pies (1 casilla, 1.5m) de movimiento para entrar en el árbol. Conoces instantáneamente la localización de todos los árboles del mismo tipo a 500 pies (100 casillas, 150 m) de distancia y, como parte del movimiento usado para entrar en el árbol, puedes pasar dentro de uno de esos árboles o salir del árbol en el que estás. Apareces en un punto de tu elección a 5 pies (1 casilla, 1.5 m) del árbol destino, usando otros 5 pies (1 casilla, 1.5 m) de movimiento. Si no tienes suficiente movimiento, apareces a 5 pies (1 casilla, 1.5 m) del árbol en el que has entrado. Puedes usar esta habilidad de transporte una vez por asalto durante la duración. Debes terminar cada turno fuera de un árbol.', '', 0, 1, 1, 0, '', 0, 1, '1 acción', 'Conjuración', 5, 'hasta 1 minuto')");
-            getDb().setTransactionSuccessful();
-        } finally {
-            getDb().endTransaction();
-        }
-    }
+
 }

@@ -20,6 +20,7 @@ import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorPersonaje;
+import com.joan.librohechizos.utiles.ComunicadorDeObjetos;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class ListarPersonajes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listar_personaje);
-        getApplicationContext().deleteDatabase("librohechizos.sqlite");
+        //getApplicationContext().deleteDatabase("librohechizos.sqlite");
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
         lista=new ArrayList<Personaje>();
         listaPersonajes = (ListView) findViewById(R.id.list_personajes);
@@ -44,6 +45,7 @@ public class ListarPersonajes extends AppCompatActivity {
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ComunicadorDeObjetos.setMensaje(lista.get(i));
                 Intent intent = new Intent(ListarPersonajes.this, LibroDeHechizos.class);
                 startActivity(intent);
                 //Toast.makeText(ListarPersonajes.this,lista.get(i).getNombre(), Toast.LENGTH_LONG).show();
