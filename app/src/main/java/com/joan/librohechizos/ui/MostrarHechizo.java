@@ -27,11 +27,11 @@ public class MostrarHechizo extends AppCompatActivity {
     }
 
     private void asignarTextViewConSuId() {
-        clases=(TextView) findViewById(R.id.txt_hechizo_clases);
+        clases = (TextView) findViewById(R.id.txt_hechizo_clases);
         clases.setText("");
-        int listaClaseTamanio=hechizo.getClases().size();
-        for(int i=0;i<listaClaseTamanio;i++){
-            clases.setText(clases.getText()+", "+hechizo.getClases().get(i).getNombre());
+        int listaClaseTamanio = hechizo.getClases().size();
+        for (int i = 0; i < listaClaseTamanio; i++) {
+            clases.setText(clases.getText() + ", " + hechizo.getClases().get(i).getNombre());
         }
         nombre = (TextView) findViewById(R.id.txt_hechizo_nombre);
         nombre.setText(hechizo.getNombre());
@@ -39,15 +39,15 @@ public class MostrarHechizo extends AppCompatActivity {
             nombre.setText(nombre.getText() + "(RITUAL)");
         }
         rango = (TextView) findViewById(R.id.txt_rango);
-        switch (hechizo.getRango()){
-            case(0):
-                rango.setText("RANGO: " +"A ti mismo");
+        switch (hechizo.getRango()) {
+            case (0):
+                rango.setText("RANGO: " + "A ti mismo");
                 break;
-            case(1):
-                rango.setText("RANGO: " +"Tocar");
+            case (1):
+                rango.setText("RANGO: " + "Tocar");
                 break;
             default:
-                rango.setText("RANGO: "+hechizo.getRango()+" pies");
+                rango.setText("RANGO: " + hechizo.getRango() + " pies");
                 break;
 
         }
@@ -58,7 +58,7 @@ public class MostrarHechizo extends AppCompatActivity {
         componentes = (TextView) findViewById(R.id.txt_componentes);
         componentes.setText("COMPONENTES: ");
         if (hechizo.getComponenteVerbal() == 1) {
-            componentes.setText(componentes.getText()+"V");
+            componentes.setText(componentes.getText() + "V");
         }
         if (hechizo.getComponenteSomatico() == 1) {
             if (!componentes.getText().equals("COMPONENTES: ")) {
@@ -72,26 +72,26 @@ public class MostrarHechizo extends AppCompatActivity {
             if (!componentes.getText().equals("COMPONENTES: ")) {
                 componentes.setText(componentes.getText() + ",");
             }
-            componentes.setText(componentes.getText() + "M");
-            if(!hechizo.getDescripcionDelComponenteMaterial().equals("")){
-                componentes.setText(componentes.getText() + "("+hechizo.getDescripcionDelComponenteMaterial()+")");
+            if (hechizo.getComponenteMaterial() == 1) {
+                componentes.setText(componentes.getText() + "M");
+                if (!hechizo.getDescripcionDelComponenteMaterial().equals("")) {
+                    componentes.setText(componentes.getText() + "(" + hechizo.getDescripcionDelComponenteMaterial() + ")");
+                }
             }
 
         }
         descripcion = (TextView) findViewById(R.id.txt_descripcion);
         descripcion.setText(hechizo.getDescripcion());
         duracion = (TextView) findViewById(R.id.txt_duracion);
-        if (hechizo.getConcentracion()==1) {
-            duracion.setText("DURACION: "+"concentracion, "+hechizo.getDuracion());
-        }else{
-            duracion.setText("DURACION: "+hechizo.getDuracion());
+        if (hechizo.getConcentracion() == 1) {
+            duracion.setText("DURACION: " + "concentracion, " + hechizo.getDuracion());
+        } else {
+            duracion.setText("DURACION: " + hechizo.getDuracion());
         }
-        aMayorNivel=(TextView) findViewById(R.id.txt_a_mayor_nivel);
+        aMayorNivel = (TextView) findViewById(R.id.txt_a_mayor_nivel);
         aMayorNivel.setText(hechizo.getaMayorNivel());
     }
 
-    private void cargarHechizo(Hechizo hechizo) {
 
-    }
 
 }

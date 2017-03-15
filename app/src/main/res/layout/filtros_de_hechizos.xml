@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light">
+
+    <Spinner
+        android:id="@+id/spn_filtro_clase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:spinnerMode="dialog"
+
+        android:layout_toLeftOf="@+id/btn_cancelar_filtros"
+        android:layout_toStartOf="@+id/btn_cancelar_filtros" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_verbal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spn_filtro_clase"
+
+        android:layout_toLeftOf="@+id/textView3"
+        android:layout_toStartOf="@+id/textView3"
+        android:checked="false"
+        android:text="V" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_somatico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/ck_filtro_abjuracion"
+
+        android:layout_alignRight="@+id/ck_filtro_abjuracion"
+        android:layout_below="@+id/spn_filtro_clase"
+        android:checked="false"
+        android:text="S" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/spn_filtro_clase"
+        android:layout_toEndOf="@+id/ck_filtro_encantamiento"
+        android:layout_toRightOf="@+id/ck_filtro_encantamiento"
+        android:checked="false"
+        android:text="M" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Materiales:"
+        android:layout_alignBaseline="@+id/ck_filtro_verbal"
+        android:layout_alignBottom="@+id/ck_filtro_verbal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_concentracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:checked="false"
+        android:text="concentracion"
+        android:textSize="15sp" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_ritual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ck_filtro_somatico"
+        android:layout_toEndOf="@+id/ck_filtro_ilucion"
+        android:layout_toRightOf="@+id/ck_filtro_ilucion"
+        android:checked="false"
+        android:text="ritual"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Escuelas"
+        android:checked="true"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/ck_filtro_ritual"
+        android:layout_toRightOf="@+id/ck_filtro_transmutacion"
+        android:layout_toEndOf="@+id/ck_filtro_transmutacion" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_conjuracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ck_filtro_ilucion"
+        android:layout_alignStart="@+id/ck_filtro_ilucion"
+        android:layout_below="@+id/ck_filtro_ilucion"
+        android:checked="false"
+        android:text="Conjuracion" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_evocacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ck_filtro_encantamiento"
+        android:layout_alignBottom="@+id/ck_filtro_encantamiento"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:checked="false"
+        android:text="Evocacion" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_encantamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ck_filtro_ilucion"
+        android:layout_alignStart="@+id/ck_filtro_ilucion"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="18dp"
+        android:checked="false"
+        android:text="Encantamiento" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_ilucion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ck_filtro_encantamiento"
+        android:layout_toEndOf="@+id/ck_filtro_concentracion"
+        android:layout_toRightOf="@+id/ck_filtro_concentracion"
+        android:checked="false"
+        android:text="Ilucion" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_abjuracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ck_filtro_conjuracion"
+        android:layout_alignStart="@+id/ck_filtro_conjuracion"
+        android:layout_below="@+id/ck_filtro_conjuracion"
+        android:checked="false"
+        android:text="Abjuracion" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_necromancia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ck_filtro_evocacion"
+        android:checked="false"
+        android:text="Necromancia" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_transmutacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ck_filtro_adivinacion"
+        android:checked="false"
+        android:text="Transmutacion" />
+
+    <CheckBox
+        android:id="@+id/ck_filtro_adivinacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ck_filtro_necromancia"
+        android:checked="false"
+        android:text="Adivinacion" />
+
+    <Button
+        android:id="@+id/btn_filtro_aplicar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/editbox_background"
+        android:text="aplicar"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_below="@+id/ck_filtro_transmutacion"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/btn_filtros_limpiar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_filtro_aplicar"
+        android:layout_alignBottom="@+id/btn_filtro_aplicar"
+        android:layout_toEndOf="@+id/btn_filtro_aplicar"
+        android:layout_toRightOf="@+id/btn_filtro_aplicar"
+        android:background="@android:drawable/editbox_background"
+        android:text="limpiar"
+        android:textColor="@android:color/holo_green_dark" />
+
+    <Button
+        android:id="@+id/btn_cancelar_filtros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_filtros_limpiar"
+        android:layout_toEndOf="@+id/btn_filtros_limpiar"
+        android:layout_toRightOf="@+id/btn_filtros_limpiar"
+        android:background="@android:drawable/editbox_background"
+        android:text="cancelar"
+        android:textColor="@android:color/holo_green_dark" />
+
+    <Spinner
+        android:id="@+id/spn_filtro_nivel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ck_filtro_somatico"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/spn_filtro_clase"
+        android:spinnerMode="dialog"
+        />
+
+</RelativeLayout>

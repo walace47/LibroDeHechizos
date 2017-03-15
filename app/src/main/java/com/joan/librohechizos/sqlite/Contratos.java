@@ -59,6 +59,10 @@ public class Contratos {
         String NOMBRE="nombre";
     }
 
+
+    public static class HechizosPorClases implements ColumnasHechizosPorClases{
+
+    }
     public static class Escuelas implements ColumnaEscuela{
 
     }
