@@ -8,21 +8,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.ListarPersonajes"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.CrearPersonajeActivity"
-            android:label="@string/activity_crear_personaje"
-            android:parentActivityName=".ui.ListarPersonajes" />
-        <activity android:name=".ui.MostrarHechizo" />
-        <activity android:name=".ui.LibroDeHechizos"></activity>
-    </application>
+    <activity
+        android:name=".ui.ListarPersonajes"
+        android:label="@string/app_name">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-</manifest>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity
+        android:name=".ui.CrearPersonajeActivity"
+        android:label="@string/activity_crear_personaje"
+        android:parentActivityName=".ui.ListarPersonajes" />
+    <activity android:name=".ui.MostrarHechizo" />
+    <activity android:name=".ui.LibroDeHechizos"></activity>
+</application>
+
+    </manifest>

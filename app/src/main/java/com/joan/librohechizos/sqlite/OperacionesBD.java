@@ -120,7 +120,7 @@ public final class OperacionesBD {
         };
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, null);
+        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
 
         return resultado;
     }
@@ -232,7 +232,7 @@ public final class OperacionesBD {
         String[] seleccionArg = {idPersonaje};
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, null);
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
 
         return resultado;
     }
@@ -273,7 +273,7 @@ public final class OperacionesBD {
         String[] seleccionArg = {idPersonaje};
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, null);
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
 
         return resultado;
     }

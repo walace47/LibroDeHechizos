@@ -19,7 +19,8 @@ import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorHechizo;
-import com.joan.librohechizos.utiles.ComunicadorDeObjetos;
+import com.joan.librohechizos.utiles.ComunicadorDeHechizo;
+import com.joan.librohechizos.utiles.ComunicadorDePersonajes;
 import com.joan.librohechizos.utiles.FiltroHechizo;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class LibroDeHechizos extends AppCompatActivity {
         vistaPreparado = (ListView) findViewById(R.id.list_preparados);
 
         //el personaje de libro de hechizos
-        this.personaje = (Personaje) ComunicadorDeObjetos.getMensaje();
+        this.personaje = (Personaje)  ComunicadorDePersonajes.getMensaje();
 
         //Creacion de listas de Hechizos
         listaTodos = new ArrayList<>();
@@ -206,14 +207,14 @@ public class LibroDeHechizos extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (vista.equals(vistaTodos)){
-                    ComunicadorDeObjetos.setMensaje(listaTodos.get(i));
+                    ComunicadorDeHechizo.setMensaje(listaTodos.get(i));
                 }else{
                     if (vista.equals(vistaAprendidos)) {
-                        ComunicadorDeObjetos.setMensaje(listaAprendidos.get(i));
+                        ComunicadorDeHechizo.setMensaje(listaAprendidos.get(i));
 
                     }else{
                         if(vista.equals(vistaPreparado)){
-                            ComunicadorDeObjetos.setMensaje(listaPreparados.get(i));
+                            ComunicadorDeHechizo.setMensaje(listaPreparados.get(i));
 
                         }
                     }
@@ -306,8 +307,7 @@ public class LibroDeHechizos extends AppCompatActivity {
                 }
                 Cursor escuela = datos.obtenerEscuela(listaHechizos.getString(12));
                 Escuela esc = new Escuela("", "");
-                escuela.moveToNext();
-                if (escuela != null) {
+                if (escuela.moveToNext()) {
                     esc.setIdEscuela(escuela.getString(0));
                     esc.setNombre(escuela.getString(1));
                 }

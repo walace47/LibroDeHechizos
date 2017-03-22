@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
 
     <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:background="@color/colorPrimaryDark">
 
         <TableRow
@@ -145,6 +146,7 @@
                         android:background="@android:drawable/editbox_background"
                         android:text="duracion:concentracion 1 hora"
                         android:textColor="@android:color/background_dark" />
+
                 </LinearLayout>
 
             </RelativeLayout>
@@ -160,7 +162,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Descripcion"
-                android:textColor="@android:color/background_light" />
+                android:textColor="@android:color/background_light"
+                android:visibility="visible" />
         </TableRow>
 
         <TableRow
@@ -173,9 +176,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/editbox_background"
+                android:backgroundTint="@android:drawable/editbox_background"
                 android:text="Tocas un cadáver o cualquiera de sus restos.  Por la duración del conjuro, el objetivo se en- cuentra protegido de la descomposición y no  puede convertirse en no muerto. Este conjuro también aumenta el tiempo  límite para alzar al objetivo de entre los muertos, porque los días pasados bajo la influencia  de este conjuro no cuentan en el tiempo límite  de  conjuros  tales  como   revivir  a  los  muertos."
-                android:textAlignment="gravity"
-                android:textColor="@android:color/background_dark" />
+                android:textAlignment="textStart"
+                android:textColor="@android:color/background_dark"
+                android:textColorLink="@android:color/background_light"
+                android:textSize="14sp"
+                android:visibility="visible" />
 
         </TableRow>
 

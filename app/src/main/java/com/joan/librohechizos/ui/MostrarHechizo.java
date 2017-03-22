@@ -2,12 +2,13 @@ package com.joan.librohechizos.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.widget.TextView;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.sqlite.OperacionesBD;
-import com.joan.librohechizos.utiles.ComunicadorDeObjetos;
+import com.joan.librohechizos.utiles.ComunicadorDeHechizo;
 
 public class MostrarHechizo extends AppCompatActivity {
     private Hechizo hechizo;
@@ -15,13 +16,12 @@ public class MostrarHechizo extends AppCompatActivity {
     TextView nombre, rango, nivelEscuela, componentes;
     TextView descripcion, aMayorNivel, tiempoDeCasteo, duracion, clases;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mostrar_hechizo);
         datos = OperacionesBD.obtenerInstancia(this);
-        hechizo = (Hechizo) ComunicadorDeObjetos.getMensaje();
+        hechizo = (Hechizo) ComunicadorDeHechizo.getMensaje();
         asignarTextViewConSuId();
 
     }
@@ -81,7 +81,13 @@ public class MostrarHechizo extends AppCompatActivity {
 
         }
         descripcion = (TextView) findViewById(R.id.txt_descripcion);
-        descripcion.setText(hechizo.getDescripcion());
+        //String description="<html><body><p align=\"justify\">"+hechizo.getDescripcion()+"</body></html></p>";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            descripcion.setText(Html.fromHtml(hechizo.getDescripcion(),Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            descripcion.setText(Html.fromHtml(hechizo.getDescripcion()));
+        }
+        //descripcion.setText(hechizo.getDescripcion());
         duracion = (TextView) findViewById(R.id.txt_duracion);
         if (hechizo.getConcentracion() == 1) {
             duracion.setText("DURACION: " + "concentracion, " + hechizo.getDuracion());

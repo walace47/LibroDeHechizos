@@ -1,10 +1,10 @@
 package com.joan.librohechizos.utiles;
 
 /**
- * Created by Joan on 12/03/2017.
+ * Created by Joan on 21/03/2017.
  */
 
-public class ComunicadorDeObjetos {
+public class ComunicadorDePersonajes {
     private static Object mensaje;
 
 
@@ -13,6 +13,7 @@ public class ComunicadorDeObjetos {
     }
 
     public static void setMensaje(Object mensaje) {
-        ComunicadorDeObjetos.mensaje = mensaje;
+        ComunicadorDePersonajes.mensaje = mensaje;
     }
 }
+

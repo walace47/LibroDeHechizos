@@ -6,21 +6,17 @@ import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorPersonaje;
-import com.joan.librohechizos.utiles.ComunicadorDeObjetos;
+import com.joan.librohechizos.utiles.ComunicadorDeHechizo;
+import com.joan.librohechizos.utiles.ComunicadorDePersonajes;
 
 import java.util.ArrayList;
 
@@ -45,7 +41,7 @@ public class ListarPersonajes extends AppCompatActivity {
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ComunicadorDeObjetos.setMensaje(lista.get(i));
+                ComunicadorDePersonajes.setMensaje(lista.get(i));
                 Intent intent = new Intent(ListarPersonajes.this, LibroDeHechizos.class);
                 startActivity(intent);
                 //Toast.makeText(ListarPersonajes.this,lista.get(i).getNombre(), Toast.LENGTH_LONG).show();

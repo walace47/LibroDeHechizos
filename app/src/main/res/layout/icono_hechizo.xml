@@ -3,46 +3,40 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TableLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TableRow
+        <TextView
+            android:id="@+id/txt_mostrar_nombre_hechizo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txt_mostrar_nombre_hechizo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textColor="@android:color/background_dark"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/txt_hechizo_escuela"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_mostrar_nombre_hechizo"
+            android:text="TextView"
+            android:textColor="@android:color/background_dark" />
 
-            <TextView
-                android:id="@+id/txt_hechizo_escuela"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/txt_mostrar_nombre_hechizo"
-                android:text="TextView"
-                android:textColor="@android:color/background_dark" />
-
-            <TextView
-                android:id="@+id/txt_hechizo_nivel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_mostrar_nombre_hechizo"
-                android:text="TextView"
-                android:textColor="@android:color/background_dark" />
-        </TableRow>
-
-    </TableLayout>
+        <TextView
+            android:id="@+id/txt_hechizo_nivel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="137dp"
+            android:layout_marginStart="137dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_dark"
+            android:layout_alignBaseline="@+id/txt_hechizo_escuela"
+            android:layout_alignBottom="@+id/txt_hechizo_escuela"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </LinearLayout>

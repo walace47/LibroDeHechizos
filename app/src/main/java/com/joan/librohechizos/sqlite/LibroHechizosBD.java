@@ -2,6 +2,7 @@ package com.joan.librohechizos.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
@@ -13,6 +14,12 @@ import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.modelo.Raza;
 import com.joan.librohechizos.sqlite.Contratos.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Giuliano on 06/03/2017.
@@ -74,18 +81,18 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         try {
             //se cargan las clases
             db.beginTransaction();
-            db.execSQL("INSERT INTO clase(nombre) values('guerrero')");
-            db.execSQL("INSERT INTO clase(nombre) values('paladin')");
-            db.execSQL("INSERT INTO clase(nombre) values('picaro')");
-            db.execSQL("INSERT INTO clase(nombre) values('mago')");
-            db.execSQL("INSERT INTO clase(nombre) values('hechicero')");
-            db.execSQL("INSERT INTO clase(nombre) values('brujo')");
-            db.execSQL("INSERT INTO clase(nombre) values('explorador')");
-            db.execSQL("INSERT INTO clase(nombre) values('monje')");
-            db.execSQL("INSERT INTO clase(nombre) values('druida')");
-            db.execSQL("INSERT INTO clase(nombre) values('clerigo')");
-            db.execSQL("INSERT INTO clase(nombre) values('bardo')");
-
+            //db.execSQL("INSERT INTO clase(nombre) values('guerrero')");
+           // db.execSQL("INSERT INTO clase(nombre) values('paladin')");
+           // db.execSQL("INSERT INTO clase(nombre) values('picaro')");
+           // db.execSQL("INSERT INTO clase(nombre) values('mago')");
+           // db.execSQL("INSERT INTO clase(nombre) values('hechicero')");
+           // db.execSQL("INSERT INTO clase(nombre) values('brujo')");
+           // db.execSQL("INSERT INTO clase(nombre) values('explorador')");
+           // db.execSQL("INSERT INTO clase(nombre) values('monje')");
+           // db.execSQL("INSERT INTO clase(nombre) values('druida')");
+           // db.execSQL("INSERT INTO clase(nombre) values('clerigo')");
+           // db.execSQL("INSERT INTO clase(nombre) values('bardo')");
+            precargarClases(db);
 
             //se cargan las razas
             db.execSQL("INSERT INTO raza(nombre) values('draconido')");
@@ -108,6 +115,12 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
             db.execSQL(String.format("INSERT INTO %s(%s, %s) values(8,'adivinacion')", Tablas.ESCUELA, Escuelas.ID_ESCUELA, Escuelas.NOMBRE));
             //se cargan hechizos
             precargarHechizos(db);
+
+            precargarHechizoscsv( db);
+           // db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,4)");
+            //db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,5)");
+
+            precargarHechizosXclaseCsv(db);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -174,10 +187,202 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (11,11)");
         db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (11,10)");
         db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (11,2)");
-        
+
+        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Acelerar [Haste]', 'Elige  una  criatura  voluntaria  que  puedas  ver  dentro del alcance. Hasta que el conjuro finalice, la velocidad del objetivo se dobla, gana un bonificador de +2 a su CA, tiene ventaja en las tiradas  de  salvación  de  Destreza,  y  gana  una  acción extra en cada uno de sus turnos. Esta acción solo puede usarse para realizar un ataque  (solo  un  ataque  de  arma),  carrera,  retirada, ocultarse, o la acción de usar un objeto.Cuando el conjuro finaliza, el objetivo no puede moverse o tomar acciones hasta su siguiente turno, como si una oleada de letargo lo cubriera.','',30,1 ,1 ,1 , 'una corteza de raíz de regaliz',0 ,1 , '1 accion',7,3 , 'hasta un minuto')");
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (13,4)");
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (13,5)");
+
+        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Adivinación [Divination]', 'Tu magia y una ofrenda te ponen en contacto con tu dios o un sirviente de tu dios.Le realizas una única pregunta que tiene que ver con un objetivo, evento o actividad específica que va tener lugar en los próximos 7 días.El DM ofrece una respuesta verdadera. La respuesta podría ser una breve frase, una rima críptica o un presagio. El conjuro no tiene en cuenta  cualquier  circunstancia  posible que pudiese  cambiar  el  resultado,  como  el  lanzamiento de conjuros adicionales o la pérdida o ganancia de un compañero. Si lanzas este conjuro dos o más veces antes  de  finalizar  tu  próximo  descanso prolongado, existe un 25% acumulativo por cada lanzamiento  después  del  primero  de  que  obtengas una lectura al azar. El DM realiza esta tirada en secreto', '',0,1 ,1 ,1 , 'incienso y una ofrenda apropiada a tu religión. Juntos, los componenetes deben costar como minimo 25 po, que  se  consumen  en  el  lanzamiento  del  conjuro',1 ,0 , '1 accion', 8,4 , 'instantaneo')");
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (13,10)");
+
+
+        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Agrandar/Reducir [Enlarge/Reduce]', 'Provocas  que  una  criatura  u  objeto  que  pue" +
+                "das  ver  dentro  del  alcance  se  vuelva  más " +
+                "grande o más pequeña mientras dure el con" +
+                "juro. Elije una criatura o un objeto que no esté " +
+                "siendo  portado  o  transportado.  Si  el  objetivo  " +
+                "no es voluntario, puede realizar una tirada de " +
+                "salvación de Constitución. Con una salvación " +
+                "con éxito el conjuro no tiene efecto." +
+                "Si el objetivo es una criatura, todo lo qu" +
+                "e " +
+                "vista y porte cambia de tamaño con ella. Cual" +
+                "quier objeto dejado caer por una criatura afec" +
+                "tada vuelve a su tamaño normal al instante.\n" +
+                "Agrandar:\n" +
+                " El objetivo dobla su tamaño en" +
+                "todas las dimensiones y su peso se multiplica " +
+                "por  ocho.  Este  crecimiento  aume" +
+                "nta  su  ta" +
+                "maño  en  una  categoría,  por  ejemplo,  de  me" +
+                "diano  a  grande.  Si  no  hay  suficiente  espacio " +
+                "para que el objetivo doble su tamaño, la cria" +
+                "tura u objeto alcanza el tamaño máximo posi" +
+                "ble en el espacio disponible. Hasta que el con" +
+                "juro finalice, el objetivo " +
+                "también tiene ventaja " +
+                "en las pruebas Fuerza y en las tiradas de sal" +
+                "Conjuros" +
+                "vación de Fuerza. Las armas del objetivo tam" +
+                "bién se agrandan con él, acorde a su nuevo ta" +
+                "maño.  Mientras  estas  armas  estén  agranda" +
+                "das,  los  ataques  que  el  objetivo  realice  con  " +
+                "ellas infligen 1d4 puntos de daño extra.\n" +
+                "Reducir:\n" +
+                " El tamaño del objetivo se reduce " +
+                "a la mitad en todas las dimensiones, y su peso " +
+                "se reduce a un octavo del normal. Esta reduc" +
+                "ción  disminuye  su  tamaño  en  una  categoría," +
+                "por  ejemplo,  de  mediano  a  pequeño.  Hasta" +
+                "que  el  conju" +
+                "ro  finalice,  el  objetivo  también " +
+                "tiene  desventaja  en  las  pruebas  Fuerza  y  en  " +
+                "las tiradas de salvación de Fuerza. Las armas " +
+                "del objetivo también se reducen con él, acorde" +
+                "a su nuevo tamaño. Mientras estas armas es" +
+                "tén  reducidas,  los  ataques  que  el  objetivo" +
+                "realice con ellas infligen 1d4 puntos de daño" +
+                "menos (esto no puede reducir el daño por de" +
+                "bajo de 1). ', '',30 ,1 ,1 ,1 , 'una pizca de hierro" +
+                "en polvo',0 ,1 ,'1 accion',7,2 ,'hasta 1 minuto')");
+
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (14,4)");
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (14,5)");
+
+
+        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Alarma [Alarm]','Se  activa  una  alarma  contra  visitas  indesea" +
+                "das. Elige una puerta, una ventana o un área " +
+                "dentro del alcance que no sea más grande que " +
+                "un cubo de 20 pies (4 casillas, 6 m)." +
+                " Hasta que " +
+                "el  conjuro  finalice,  una  alarma  avisa  cuando " +
+                "una criatura, ya sea pequeña o grande, toca o " +
+                "entre  en  el  área  protegida.  Cuando  lanzas  el " +
+                "conjuro, puedes elegir a ciertas criaturas que " +
+                "no  harán  sonar  la  alarma.  También  puedes " +
+                "elegir si la alarm" +
+                "a e" +
+                "s un aviso mental o audi" +
+                "ble." +
+                "La  alarma  mental  te  alerta  enviando  un  " +
+                "pensamiento a tu mente " +
+                "si te encuentras a me" +
+                "nos  de  1  milla  (1,6" +
+                "  km" +
+                ")  del  área  protegida. " +
+                "Este  pensamiento  te  despierta  si  estás  dor" +
+                "mido." +
+                "Una  alarma  audible  emite  el  sonido  de  " +
+                "una  campana  de  mano  durante  10  segundos  " +
+                "dentro de un área de 60 pies (12 casillas, 18 " +
+                "m).','',30,1,1,1,'(una  pequeña  cam" +
+                "pana y un pedazo de fino alambre de plata',1,0,'1 minuto',3,1,'8 horas')");
+
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (15,7)");
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (15,4)");
+
+        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Aliado de los planos [Planar Ally]', 'Le  imploras  ayuda a una entidad de otro mundo.  El  ser  debe  ser  conocido  por  ti:  un dios, un primordial, un príncipe demonio, o algún otro ser de poderes cósmicos. Aquella entidad envía un celestial, elemental o demonio que le es leal para socorrerte, haciendo que la criatura  aparezca  en  un  espacio  desocupado dentro  del  alcance.  Si  conoces  el  nombre  de una criatura en concreto, podrías pedirle que viniera con solo mencionar su nombre al ejecutar el conjuro, aunque de todas formas, podria  terminar  acudiendo  una  criatura  diferente (a lelección del DM).Cuando  la  criatura  aparece, no está bajo ninguna  obligación  de  comportarse  de  una manera en particular. Puedes pedirle a la criatura que realice un servicio a cambio de un pago, pero no está obligada a hacerlo. La tarea solicitada puede ir desde algo simple (llévanos volando al otro lado del abismo, o ayúdanos a pelear  una  batalla)  a  algo  complejo (espía a nuestros enemigos, o protégenos durante nuestra  incursión  en  el  dungeon).  Debes  ser  capaz de comunicarte con la criatura para negociar por sus servicios.El  pago  puede  tomar  varias  formas. Un celestial  puede  requerir  una  donación  considerable de oro u objetos mágicos para un templo aliado, mientas que un demonio puede demandar  un  sacrificio  viviente  o  un  regalo  en forma de tesoro. Algunas criaturas pueden intercambiar  sus  servicios  por  una  misión  llevada a cabo por ti. Como regla general, una tarea que pueda ser  calculada  en  minutos  requiere  un  pago  que merece 100 po por minuto. Una tarea calculada en horas requiere 1.000 po por hora. Y una tarea calculada en días (hasta 10 días) requiere 10.000 po por día. El DM puede ajustar estos  pagos  basados  en  las  circunancias  bajo  las  que  lanzaste  el  conjuro.  Si  la  tarea  está alineada con los valores de la criatura, el pago podría ser reducido a la mitad o incluso renunciar  a  el. Las  tareas  no  peligrosas requieren típicamente sólo la mitad del pago sugerido, mientras que tareas especialmente peligrosas pueden requerir un obsequio mayor. Las  criaturas  raramente  aceptan  tareas  que  parezcan suicidas. Después de que la criatura complete la tarea,  o  cuando  el  estado  del  acuerdo  sobre  la  duración  del  servicio  expira,  la  criatura  retorna  a  su  plano  natal  después  de  presenciarse de vuelta ante ti, si es apropiado debido a  la  tarea  y  si  es posible.  Si  eres  incapaz  de  acordar  un  precio  por  el  servicio  de  la  criatura, ésta inmediatamente retorna a su plano de hogar.Una  criatura  reclutada  para  unirse  a  tu  grupo cuenta como un miembro de éste, recibiendo  una  parte  completa  de  los  puntos de experiencia obtenidos.', '',60,1 ,1 ,0 ,'',0 ,0 , '10 minutos', 1,6 , 'instantaneo')");
+        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (16,10)");
 
     }
 
+
+    public void precargarClases(SQLiteDatabase db)  {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Clases.csv");;
+
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
+        String line = "";
+        try {
+            buffer.readLine();
+            while ((line = buffer.readLine()) != null) {
+                String[] colums = line.split(",");
+
+                ContentValues cv = new ContentValues(2);
+                cv.put(Clases.ID_CLASE, colums[0].trim());
+                cv.put(Clases.NOMBRE, colums[1].trim());
+                db.insert(Tablas.CLASE, null, cv);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void precargarHechizoscsv(SQLiteDatabase db)  {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Hechizosl.csv");
+        BufferedReader buffer = null;
+        try {
+            buffer = new BufferedReader(new InputStreamReader(inStream, "cp1252"));
+        } catch (UnsupportedEncodingException e) {
+            System.out.printf("no anda");
+            e.printStackTrace();
+        }
+        String line = "";
+        try {
+            //buffer.readLine();
+            while ((line = buffer.readLine()) != null) {
+                String[] colums = line.split("&");
+               // if (colums.length != 12) {
+                 //   Log.d("CSVParser", "Skipping Bad CSV Row");
+                   // continue;
+               // }
+                ContentValues cv = new ContentValues();
+                cv.put(Hechizos.ID_HECHIZO, colums[0].trim());
+                cv.put(Hechizos.NOMBRE, colums[1].trim());
+                cv.put(Hechizos.DESCRIPCION, colums[2].trim());
+                cv.put(Hechizos.A_MAYOR_NIVEL, colums[3].trim());
+                cv.put(Hechizos.RANGO, colums[4].trim());
+                cv.put(Hechizos.COMPONENTE_VERBAL, colums[5].trim());
+                cv.put(Hechizos.COMPONENTE_SOMATICO, colums[6].trim());
+                cv.put(Hechizos.COMPONENTE_MATERIAL, colums[7].trim());
+                cv.put(Hechizos.DESCRIPCION_COMPONENTE, colums[8].trim());
+                cv.put(Hechizos.RITUAL, colums[9].trim());
+                cv.put(Hechizos.CONCENTRACION, colums[10].trim());
+                cv.put(Hechizos.TIEMPO_DE_CASTEO, colums[11].trim());
+                cv.put(Hechizos.ESCUELA, colums[12].trim());
+                cv.put(Hechizos.NIVEL, colums[13].trim());
+                cv.put(Hechizos.DURACION, colums[14].trim());
+
+
+
+
+                db.insert(Tablas.HECHIZOS, null, cv);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void precargarHechizosXclaseCsv(SQLiteDatabase db)  {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/HechizoxClase.csv");;
+
+        BufferedReader buffer = null;
+        try {
+            buffer = new BufferedReader(new InputStreamReader(inStream, "cp1252"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        try {
+            //buffer.readLine();
+            while ((line = buffer.readLine()) != null) {
+                String[] colums = line.split(";");
+                // if (colums.length != 12) {
+                //   Log.d("CSVParser", "Skipping Bad CSV Row");
+                // continue;
+                // }
+                ContentValues cv = new ContentValues();
+                cv.put(HechizosPorClases.ID_HECHIZO, colums[0].trim());
+                cv.put(HechizosPorClases.ID_CLASE, colums[1].trim());
+
+
+
+
+                db.insert(Tablas.HECHIZOS_POR_CLASE, null, cv);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
