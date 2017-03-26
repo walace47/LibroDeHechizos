@@ -8,25 +8,26 @@
     android:weightSum="1">
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
         android:id="@+id/edt_personaje_nombre"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_width="199dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:textSize="18sp"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
         android:gravity="center_vertical|center_horizontal"
-        android:hint="Nombre" />
+        android:hint="Nombre"
+        android:inputType="textPersonName"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
     <TextView
         android:text="Clase"
-        android:layout_width="match_parent"
+        android:layout_width="93dp"
         android:layout_height="wrap_content"
         android:id="@+id/txt_clase"
         android:layout_below="@+id/edt_personaje_nombre"
@@ -53,7 +54,7 @@
 
     <TextView
         android:text="Raza"
-        android:layout_width="match_parent"
+        android:layout_width="109dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spn_personaje_clase"
         android:layout_alignParentLeft="true"
@@ -75,12 +76,16 @@
     />
 
     <Button
-        android:text="CREAR"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_personaje_crear"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/btn_personaje_crear"
-        android:onClick="btnPersonajeCrear" />
+        android:layout_weight="0.09"
+        android:background="@android:drawable/ic_menu_save"
+        android:backgroundTint="@color/colorPrimary"
+        android:onClick="btnPersonajeCrear"
+        android:textColor="@android:color/holo_green_dark"
+        android:textColorLink="@color/colorPrimaryDark" />
 
 </LinearLayout>

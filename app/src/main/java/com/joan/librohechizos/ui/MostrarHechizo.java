@@ -28,9 +28,9 @@ public class MostrarHechizo extends AppCompatActivity {
 
     private void asignarTextViewConSuId() {
         clases = (TextView) findViewById(R.id.txt_hechizo_clases);
-        clases.setText("");
         int listaClaseTamanio = hechizo.getClases().size();
-        for (int i = 0; i < listaClaseTamanio; i++) {
+        clases.setText(hechizo.getClases().get(0).getNombre());
+        for (int i = 1; i < listaClaseTamanio; i++) {
             clases.setText(clases.getText() + ", " + hechizo.getClases().get(i).getNombre());
         }
         nombre = (TextView) findViewById(R.id.txt_hechizo_nombre);
@@ -54,7 +54,7 @@ public class MostrarHechizo extends AppCompatActivity {
         nivelEscuela = (TextView) findViewById(R.id.txt_hechizo_escuela_nivel);
         nivelEscuela.setText(hechizo.getEscuela().getNombre() + " Nivel: " + hechizo.getNivel());
         tiempoDeCasteo = (TextView) findViewById(R.id.txt_coste);
-        tiempoDeCasteo.setText("CASTEO: " + hechizo.getTiempoDeCasteo());
+        tiempoDeCasteo.setText("TIEMPO DE CASTEO: " + hechizo.getTiempoDeCasteo());
         componentes = (TextView) findViewById(R.id.txt_componentes);
         componentes.setText("COMPONENTES: ");
         if (hechizo.getComponenteVerbal() == 1) {
@@ -67,19 +67,19 @@ public class MostrarHechizo extends AppCompatActivity {
             componentes.setText(componentes.getText() + "S");
 
         }
-        if (hechizo.getComponenteVerbal() == 1) {
 
-            if (!componentes.getText().equals("COMPONENTES: ")) {
-                componentes.setText(componentes.getText() + ",");
-            }
+
+
             if (hechizo.getComponenteMaterial() == 1) {
+                if (!componentes.getText().equals("COMPONENTES: ")) {
+                    componentes.setText(componentes.getText() + ",");
+                }
                 componentes.setText(componentes.getText() + "M");
                 if (!hechizo.getDescripcionDelComponenteMaterial().equals("")) {
                     componentes.setText(componentes.getText() + "(" + hechizo.getDescripcionDelComponenteMaterial() + ")");
                 }
             }
 
-        }
         descripcion = (TextView) findViewById(R.id.txt_descripcion);
         //String description="<html><body><p align=\"justify\">"+hechizo.getDescripcion()+"</body></html></p>";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -90,7 +90,7 @@ public class MostrarHechizo extends AppCompatActivity {
         //descripcion.setText(hechizo.getDescripcion());
         duracion = (TextView) findViewById(R.id.txt_duracion);
         if (hechizo.getConcentracion() == 1) {
-            duracion.setText("DURACION: " + "concentracion, " + hechizo.getDuracion());
+            duracion.setText("DURACION: " + "Concentración, " + hechizo.getDuracion());
         } else {
             duracion.setText("DURACION: " + hechizo.getDuracion());
         }

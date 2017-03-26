@@ -4,4 +4,8 @@
     <string name="activity_crear_personaje">Crear personaje</string>
     <string name="title_activity_listar_personajes_aux">ListarPersonajesAux</string>
     <string name="title_activity_listar_personaje_aux">ListarPersonajeAux</string>
+    <string name="action_buscar" />
+    <string name="action_settings" />
+    <string name="action_nuevo" />
+    <string name="action_edit" />
 </resources>

@@ -35,6 +35,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         spnClase.setAdapter(cargarClases());
         spnRaza.setAdapter(cargarRazas());
 
+
     }
 
     private ArrayAdapter cargarClases() {

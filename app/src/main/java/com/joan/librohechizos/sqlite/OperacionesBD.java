@@ -82,7 +82,7 @@ public final class OperacionesBD {
                 Clases.NOMBRE};
 
         builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
+        Cursor resultado = builder.query(db, proyeccion, null, null, null, null,Clases.NOMBRE );
 
         return resultado;
     }
@@ -135,7 +135,7 @@ public final class OperacionesBD {
                 Razas.NOMBRE};
 
         builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
+        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, Razas.NOMBRE);
 
         return resultado;
     }
@@ -311,6 +311,21 @@ public final class OperacionesBD {
         String[] whereArgs = {idPersonaje, idHechizo};
 
         db.update(Tablas.HECHIZOS_APRENDIDOS, valores, whereClause, whereArgs);
+    }
+
+    public void editarPersonaje(String idPersonaje,String nombre,String raza,String clase){
+        SQLiteDatabase db = baseDatos.getWritableDatabase();
+
+        ContentValues valores = new ContentValues();
+        valores.put(Personajes.ID_CLASE, clase);
+        valores.put(Personajes.NOMBRE, nombre);
+        valores.put(Personajes.ID_RAZA, raza);
+
+        String selection = String.format("%s=? ",
+                Personajes.ID_PERSONAJE);
+        final String[] whereArgs = {idPersonaje};
+        db.update(Tablas.PERSONAJE, valores, selection, whereArgs);
+
     }
 
     public void eliminarPersonaje(String idPersonaje) {

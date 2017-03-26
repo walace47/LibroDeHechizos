@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -99,6 +101,19 @@ public class LibroDeHechizos extends AppCompatActivity {
         agregarFuncionalidadLongclikAprendido();
 
 
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_libro_de_hechizos,menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (item.getItemId()==R.id.action_edit){
+            Intent intent = new Intent(this, editarPersonaje.class);
+            startActivity(intent);
+        }
+        return true;
     }
 
 
@@ -341,6 +356,8 @@ public class LibroDeHechizos extends AppCompatActivity {
 
     }
 
+
+
     public void setFiltro(String nuevoFiltro) {
         this.filtro = nuevoFiltro;
         listarTodoLosHechizos();
@@ -355,5 +372,7 @@ public class LibroDeHechizos extends AppCompatActivity {
 
     }
 
-
+    public void setClickFiltro(boolean clickFiltro) {
+        this.clickFiltro = clickFiltro;
+    }
 }

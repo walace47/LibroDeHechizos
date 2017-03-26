@@ -40,8 +40,10 @@ public class FiltroHechizo {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         popView = layoutInflater.inflate(R.layout.filtros_de_hechizos, null);
-        popupWindow = new PopupWindow(popView, RadioGroup.LayoutParams.WRAP_CONTENT,
+        popupWindow = new PopupWindow(popView, RadioGroup.LayoutParams.MATCH_PARENT,
                 RadioGroup.LayoutParams.WRAP_CONTENT);
+        //popupWindow.setHeight(100);
+        //popupWindow.setWidth(WRAP_CONTENT);
         datos = OperacionesBD.obtenerInstancia(context);
         this.btnAplicar = (Button) popView.findViewById(R.id.btn_filtro_aplicar);
         this.btnCerrar = (Button) popView.findViewById(R.id.btn_cancelar_filtros);
@@ -77,6 +79,7 @@ public class FiltroHechizo {
         btnLimpiar.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                context.setClickFiltro(false);
                 context.setFiltro("");
                 popupWindow.dismiss();
             }
@@ -89,6 +92,7 @@ public class FiltroHechizo {
         btnCerrar.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                context.setClickFiltro(false);
                 popupWindow.dismiss();
             }
         });
@@ -101,6 +105,7 @@ public class FiltroHechizo {
             @Override
             public void onClick(View v) {
                 String seleccion = obtenerSeleccionYArgumentos();
+                context.setClickFiltro(false);
                 popupWindow.dismiss();
                 context.setFiltro(seleccion);
             }
