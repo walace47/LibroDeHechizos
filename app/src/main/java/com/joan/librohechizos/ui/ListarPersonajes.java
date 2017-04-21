@@ -1,5 +1,6 @@
 package com.joan.librohechizos.ui;
 
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,6 +23,8 @@ import com.joan.librohechizos.utiles.ComunicadorDePersonajes;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class ListarPersonajes extends AppCompatActivity {
     private ArrayList<Personaje> lista;
     private OperacionesBD datos;
@@ -30,6 +33,7 @@ public class ListarPersonajes extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.listar_personaje);
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
         lista=new ArrayList<>();
@@ -42,9 +46,17 @@ public class ListarPersonajes extends AppCompatActivity {
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    ComunicadorDePersonajes.setMensaje(lista.get(i));
+                   // ComunicadorDePersonajes.setMensaje(lista.get(i));
                     Intent intent = new Intent(ListarPersonajes.this, LibroDeHechizos.class);
-                    startActivity(intent);
+                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+
+                intent.putExtra("idPersonaje",lista.get(i).getIdPersonaje());
+
+                //PendingIntent pi = PendingIntent.getActivity(ListarPersonajes.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//                Toast.makeText(getApplicationContext(),
+    //                        lista.get(i).getIdPersonaje(), Toast.LENGTH_SHORT).show();
+                   startActivity(intent);
             }
 
         });
@@ -77,6 +89,13 @@ public class ListarPersonajes extends AppCompatActivity {
 
 
     }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        this.setIntent(intent);
+    }
+
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_listar_personajes,menu);

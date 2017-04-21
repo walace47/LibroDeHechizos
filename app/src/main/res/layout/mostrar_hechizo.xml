@@ -167,18 +167,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <WebView
                 android:id="@+id/txt_descripcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/editbox_background"
-                android:backgroundTint="@android:drawable/editbox_background"
-                android:text="Tocas un cadáver o cualquiera de sus restos.  Por la duración del conjuro, el objetivo se en- cuentra protegido de la descomposición y no  puede convertirse en no muerto. Este conjuro también aumenta el tiempo  límite para alzar al objetivo de entre los muertos, porque los días pasados bajo la influencia  de este conjuro no cuentan en el tiempo límite  de  conjuros  tales  como   revivir  a  los  muertos."
-                android:textColor="@android:color/background_dark"
-                android:textColorLink="@android:color/background_light"
-                android:textSize="14sp"
-                android:visibility="visible" />
-
+                android:background="@android:drawable/editbox_background" />
         </TableRow>
 
         <TableRow
@@ -204,7 +197,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/editbox_background"
-                android:text="Tocas un cadáver o cualquiera de sus restos.  Por la duración del conjuro, el objetivo se en- cuentra protegido de la descomposición y no  puede convertirse en no muerto. Este conjuro también aumenta el tiempo  límite para alzar al objetivo d e entre los muer- tos, porque los días pasados bajo la influencia  de este conjuro no cuentan en el tiempo límite  de  conjuros  tales  como   revivir  a  los  muertos."
                 android:textAlignment="inherit"
                 android:textColor="@android:color/background_dark" />
         </TableRow>

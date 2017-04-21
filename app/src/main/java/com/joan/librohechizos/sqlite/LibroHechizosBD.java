@@ -79,21 +79,9 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
     private void precargarDatos(SQLiteDatabase db) {
         try {
-            //se cargan las clases
             db.beginTransaction();
-            //db.execSQL("INSERT INTO clase(nombre) values('guerrero')");
-           // db.execSQL("INSERT INTO clase(nombre) values('paladin')");
-           // db.execSQL("INSERT INTO clase(nombre) values('picaro')");
-           // db.execSQL("INSERT INTO clase(nombre) values('mago')");
-           // db.execSQL("INSERT INTO clase(nombre) values('hechicero')");
-           // db.execSQL("INSERT INTO clase(nombre) values('brujo')");
-           // db.execSQL("INSERT INTO clase(nombre) values('explorador')");
-           // db.execSQL("INSERT INTO clase(nombre) values('monje')");
-           // db.execSQL("INSERT INTO clase(nombre) values('druida')");
-           // db.execSQL("INSERT INTO clase(nombre) values('clerigo')");
-           // db.execSQL("INSERT INTO clase(nombre) values('bardo')");
+            //se cargan las clases
             precargarClases(db);
-
             //se cargan las razas
             db.execSQL("INSERT INTO raza(nombre) values('draconido')");
             db.execSQL("INSERT INTO raza(nombre) values('humano')");
@@ -116,8 +104,8 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
             //se cargan hechizos
             precargarHechizos(db);
 
-            precargarHechizoscsv( db);
-           // db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,4)");
+            precargarHechizoscsv(db);
+            // db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,4)");
             //db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,5)");
 
             precargarHechizosXclaseCsv(db);
@@ -192,26 +180,27 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
     }
 
 
-    public void precargarClases(SQLiteDatabase db)  {
-        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Clases.csv");;
-
+    public void precargarClases(SQLiteDatabase db) {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Clases.csv");
         BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
         String line = "";
         try {
             buffer.readLine();
             while ((line = buffer.readLine()) != null) {
                 String[] colums = line.split(",");
-
-                ContentValues cv = new ContentValues(2);
-                cv.put(Clases.ID_CLASE, colums[0].trim());
-                cv.put(Clases.NOMBRE, colums[1].trim());
-                db.insert(Tablas.CLASE, null, cv);
+                if (colums.length == 2) {
+                    ContentValues cv = new ContentValues(2);
+                    cv.put(Clases.ID_CLASE, colums[0].trim());
+                    cv.put(Clases.NOMBRE, colums[1].trim());
+                    db.insert(Tablas.CLASE, null, cv);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void precargarHechizoscsv(SQLiteDatabase db)  {
+
+    public void precargarHechizoscsv(SQLiteDatabase db) {
         InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Hechizosl.csv");
         BufferedReader buffer = null;
         try {
@@ -222,34 +211,32 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         }
         String line = "";
         try {
-            //buffer.readLine();
             while ((line = buffer.readLine()) != null) {
                 String[] colums = line.split("&");
-               // if (colums.length != 12) {
-                 //   Log.d("CSVParser", "Skipping Bad CSV Row");
-                   // continue;
-               // }
-                ContentValues cv = new ContentValues();
-                cv.put(Hechizos.ID_HECHIZO, colums[0].trim());
-                cv.put(Hechizos.NOMBRE, colums[1].trim());
-                cv.put(Hechizos.DESCRIPCION, colums[2].trim());
-                cv.put(Hechizos.A_MAYOR_NIVEL, colums[3].trim());
-                cv.put(Hechizos.RANGO, colums[4].trim());
-                cv.put(Hechizos.COMPONENTE_VERBAL, colums[5].trim());
-                cv.put(Hechizos.COMPONENTE_SOMATICO, colums[6].trim());
-                cv.put(Hechizos.COMPONENTE_MATERIAL, colums[7].trim());
-                cv.put(Hechizos.DESCRIPCION_COMPONENTE, colums[8].trim());
-                cv.put(Hechizos.RITUAL, colums[9].trim());
-                cv.put(Hechizos.CONCENTRACION, colums[10].trim());
-                cv.put(Hechizos.TIEMPO_DE_CASTEO, colums[11].trim());
-                cv.put(Hechizos.ESCUELA, colums[12].trim());
-                cv.put(Hechizos.NIVEL, colums[13].trim());
-                cv.put(Hechizos.DURACION, colums[14].trim());
+                if (colums.length == 15) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(Hechizos.ID_HECHIZO, colums[0].trim());
+                    cv.put(Hechizos.NOMBRE, colums[1].trim());
+                    String descripcion = colums[2].trim();
+                    descripcion = descripcion.replaceAll("<br>", "</p><p>");
+                    cv.put(Hechizos.DESCRIPCION, descripcion);
+                    cv.put(Hechizos.A_MAYOR_NIVEL, colums[3].trim());
+                    cv.put(Hechizos.RANGO, colums[4].trim());
+                    cv.put(Hechizos.COMPONENTE_VERBAL, colums[5].trim());
+                    cv.put(Hechizos.COMPONENTE_SOMATICO, colums[6].trim());
+                    cv.put(Hechizos.COMPONENTE_MATERIAL, colums[7].trim());
+                    cv.put(Hechizos.DESCRIPCION_COMPONENTE, colums[8].trim());
+                    cv.put(Hechizos.RITUAL, colums[9].trim());
+                    cv.put(Hechizos.CONCENTRACION, colums[10].trim());
+                    cv.put(Hechizos.TIEMPO_DE_CASTEO, colums[11].trim());
+                    cv.put(Hechizos.ESCUELA, colums[12].trim());
+                    cv.put(Hechizos.NIVEL, colums[13].trim());
+                    cv.put(Hechizos.DURACION, colums[14].trim());
+                    db.insert(Tablas.HECHIZOS, null, cv);
+
+                }
 
 
-
-
-                db.insert(Tablas.HECHIZOS, null, cv);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -257,8 +244,9 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
     }
 
 
-    public void precargarHechizosXclaseCsv(SQLiteDatabase db)  {
-        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/HechizoxClase.csv");;
+    public void precargarHechizosXclaseCsv(SQLiteDatabase db) {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/HechizoxClase.csv");
+        ;
 
         BufferedReader buffer = null;
         try {
@@ -278,8 +266,6 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
                 ContentValues cv = new ContentValues();
                 cv.put(HechizosPorClases.ID_HECHIZO, colums[0].trim());
                 cv.put(HechizosPorClases.ID_CLASE, colums[1].trim());
-
-
 
 
                 db.insert(Tablas.HECHIZOS_POR_CLASE, null, cv);

@@ -49,6 +49,11 @@ public class Hechizo  {
         this.clases=clases;
     }
 
+    public Hechizo(String nombre,int nivel){
+        this.nombre=nombre;
+        this.nivel=nivel;
+    }
+
     public String getIdHechizo() {
         return idHechizo;
     }

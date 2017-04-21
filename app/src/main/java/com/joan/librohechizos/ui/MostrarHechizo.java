@@ -1,27 +1,40 @@
 package com.joan.librohechizos.ui;
 
+import android.app.ActionBar;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.Window;
+import android.webkit.WebView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joan.librohechizos.R;
+import com.joan.librohechizos.modelo.Clase;
+import com.joan.librohechizos.modelo.Escuela;
 import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.ComunicadorDeHechizo;
+
+import java.util.ArrayList;
 
 public class MostrarHechizo extends AppCompatActivity {
     private Hechizo hechizo;
     private OperacionesBD datos;
     TextView nombre, rango, nivelEscuela, componentes;
-    TextView descripcion, aMayorNivel, tiempoDeCasteo, duracion, clases;
+    TextView  aMayorNivel, tiempoDeCasteo, duracion, clases;
+    WebView descripcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         setContentView(R.layout.mostrar_hechizo);
         datos = OperacionesBD.obtenerInstancia(this);
-        hechizo = (Hechizo) ComunicadorDeHechizo.getMensaje();
+        hechizo = obtenerHechizo(getIntent().getStringExtra("idHechizo"));
         asignarTextViewConSuId();
 
     }
@@ -29,7 +42,7 @@ public class MostrarHechizo extends AppCompatActivity {
     private void asignarTextViewConSuId() {
         clases = (TextView) findViewById(R.id.txt_hechizo_clases);
         int listaClaseTamanio = hechizo.getClases().size();
-        clases.setText(hechizo.getClases().get(0).getNombre());
+       clases.setText(hechizo.getClases().get(0).getNombre());
         for (int i = 1; i < listaClaseTamanio; i++) {
             clases.setText(clases.getText() + ", " + hechizo.getClases().get(i).getNombre());
         }
@@ -67,9 +80,6 @@ public class MostrarHechizo extends AppCompatActivity {
             componentes.setText(componentes.getText() + "S");
 
         }
-
-
-
             if (hechizo.getComponenteMaterial() == 1) {
                 if (!componentes.getText().equals("COMPONENTES: ")) {
                     componentes.setText(componentes.getText() + ",");
@@ -80,14 +90,25 @@ public class MostrarHechizo extends AppCompatActivity {
                 }
             }
 
-        descripcion = (TextView) findViewById(R.id.txt_descripcion);
-        //String description="<html><body><p align=\"justify\">"+hechizo.getDescripcion()+"</body></html></p>";
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            descripcion.setText(Html.fromHtml(hechizo.getDescripcion(),Html.FROM_HTML_MODE_LEGACY));
-        } else {
-            descripcion.setText(Html.fromHtml(hechizo.getDescripcion()));
-        }
-        //descripcion.setText(hechizo.getDescripcion());
+        descripcion = (WebView) findViewById(R.id.txt_descripcion);
+        String description="<html><body><head><style type=\"text/css\">\n" +
+                "p {\n" +
+                "font-size:90%;text-indent: 1em; text-align:justify; \n" +
+                "}\n" +"body {font-family: Arial, Helvetica, sans-serif;}\n" +
+                "\n" +
+                "table {     font-family: \"Lucida Sans Unicode\", \"Lucida Grande\", Sans-Serif;\n" +
+                "    font-size: 12px;     width: 100%; text-align: left;    border-collapse: collapse; }\n" +
+                "\n" +
+                "th {     font-size: 13px;     font-weight: normal;          background: #b9c9fe;\n" +
+                "    border-top: 4px solid #aabcfe;    border-bottom: 1px solid #fff; color: #039; }\n" +
+                "\n" +
+                "td {         background: #e8edff;     border-bottom: 1px solid #fff;\n" +
+                "    color: #669;    border-top: 1px solid transparent; }\n" +
+                "\n" +
+                "tr:hover td { background: #d0dafd; color: #339; }"+
+                "</style></head><p>"+hechizo.getDescripcion()+"</p></body></html>";
+        //description=description.replaceAll("<br>","</p><p>");
+        descripcion.loadData(description,"text/html; charset=UTF-8",null);
         duracion = (TextView) findViewById(R.id.txt_duracion);
         if (hechizo.getConcentracion() == 1) {
             duracion.setText("DURACION: " + "Concentración, " + hechizo.getDuracion());
@@ -98,6 +119,36 @@ public class MostrarHechizo extends AppCompatActivity {
         aMayorNivel.setText(hechizo.getaMayorNivel());
     }
 
+
+    private Hechizo obtenerHechizo(String id){
+            Hechizo hechizo=null;
+            Cursor listaHechizos = datos.obtenerHechizo(id);
+            try {
+                    ArrayList<Clase> listaClase = new ArrayList<>();
+                    while(listaHechizos.moveToNext()){
+                        listaClase.add(new Clase(listaHechizos.getString(15), listaHechizos.getString(16)));
+                    }
+                    listaHechizos.moveToPrevious();
+
+                    Cursor escuela = datos.obtenerEscuela(listaHechizos.getString(12));
+                    Escuela esc = new Escuela("", "");
+                    if (escuela.moveToNext()) {
+                        esc.setIdEscuela(escuela.getString(0));
+                        esc.setNombre(escuela.getString(1));
+                    }
+
+                    hechizo=new Hechizo(listaHechizos.getString(0), listaHechizos.getString(1),
+                            listaHechizos.getString(2), listaHechizos.getString(3), listaHechizos.getInt(4),
+                            listaHechizos.getInt(5), listaHechizos.getInt(6), listaHechizos.getInt(7), listaHechizos.getString(8),
+                            listaHechizos.getInt(9), listaHechizos.getInt(10), listaHechizos.getString(11), esc,
+                            listaHechizos.getInt(13), listaHechizos.getString(14), listaClase);
+                    escuela.close();
+            } finally {
+                listaHechizos.close();
+
+            }
+            return hechizo;
+        }
 
 
 }

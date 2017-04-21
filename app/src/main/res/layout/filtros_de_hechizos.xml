@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@android:color/background_light">
 
     <Spinner
@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:spinnerMode="dialog"
-
         android:layout_toLeftOf="@+id/btn_cancelar_filtros"
-        android:layout_toStartOf="@+id/btn_cancelar_filtros" />
+
+        android:layout_toStartOf="@+id/btn_cancelar_filtros"
+        android:spinnerMode="dialog" />
 
     <CheckBox
         android:id="@+id/ck_filtro_verbal"
@@ -42,11 +42,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/spn_filtro_clase"
-        android:layout_toEndOf="@+id/ck_filtro_encantamiento"
-        android:layout_toRightOf="@+id/ck_filtro_encantamiento"
         android:checked="false"
-        android:text="M" />
+        android:text="M"
+        android:layout_below="@+id/spn_filtro_nivel"
+        android:layout_toRightOf="@+id/ck_filtro_conjuracion"
+        android:layout_toEndOf="@+id/ck_filtro_conjuracion"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -55,8 +57,8 @@
         android:text="Materiales:"
         android:layout_alignBaseline="@+id/ck_filtro_verbal"
         android:layout_alignBottom="@+id/ck_filtro_verbal"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignRight="@+id/ck_filtro_adivinacion"
+        android:layout_alignEnd="@+id/ck_filtro_adivinacion" />
 
     <CheckBox
         android:id="@+id/ck_filtro_concentracion"
@@ -84,12 +86,14 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Escuelas"
-        android:checked="true"
         android:layout_marginTop="18dp"
+        android:checked="true"
+        android:text="Escuelas"
+        android:layout_marginRight="7dp"
+        android:layout_marginEnd="7dp"
         android:layout_below="@+id/ck_filtro_ritual"
-        android:layout_toRightOf="@+id/ck_filtro_transmutacion"
-        android:layout_toEndOf="@+id/ck_filtro_transmutacion" />
+        android:layout_alignRight="@+id/ck_filtro_somatico"
+        android:layout_alignEnd="@+id/ck_filtro_somatico" />
 
     <CheckBox
         android:id="@+id/ck_filtro_conjuracion"
@@ -177,12 +181,12 @@
         android:id="@+id/btn_filtro_aplicar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ck_filtro_transmutacion"
         android:background="@android:drawable/editbox_background"
         android:text="aplicar"
-        android:textColor="@android:color/holo_green_dark"
-        android:layout_below="@+id/ck_filtro_transmutacion"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textColor="@android:color/holo_green_dark" />
 
     <Button
         android:id="@+id/btn_filtros_limpiar"
@@ -192,8 +196,8 @@
         android:text="limpiar"
         android:textColor="@android:color/holo_green_dark"
         android:layout_below="@+id/ck_filtro_abjuracion"
-        android:layout_toRightOf="@+id/ck_filtro_evocacion"
-        android:layout_toEndOf="@+id/ck_filtro_evocacion" />
+        android:layout_alignRight="@+id/ck_filtro_abjuracion"
+        android:layout_alignEnd="@+id/ck_filtro_abjuracion" />
 
     <Button
         android:id="@+id/btn_cancelar_filtros"
@@ -203,8 +207,10 @@
         android:text="cancelar"
         android:textColor="@android:color/holo_green_dark"
         android:layout_below="@+id/ck_filtro_abjuracion"
-        android:layout_alignLeft="@+id/ck_filtro_somatico"
-        android:layout_alignStart="@+id/ck_filtro_somatico" />
+        android:layout_toRightOf="@+id/ck_filtro_ritual"
+        android:layout_toEndOf="@+id/ck_filtro_ritual"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp" />
 
     <Spinner
         android:id="@+id/spn_filtro_nivel"
@@ -214,7 +220,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/spn_filtro_clase"
-        android:spinnerMode="dialog"
-        />
+        android:spinnerMode="dialog" />
 
 </RelativeLayout>

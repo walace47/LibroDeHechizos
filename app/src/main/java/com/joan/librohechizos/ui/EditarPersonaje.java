@@ -3,6 +3,8 @@ package com.joan.librohechizos.ui;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
  * Created by Joan on 26/03/2017.
  */
 
-public class editarPersonaje extends AppCompatActivity {
+public class EditarPersonaje extends AppCompatActivity {
     private Personaje pj;
     private EditText edtNombre;
     private Spinner spnClase;
@@ -34,10 +36,12 @@ public class editarPersonaje extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_crear_personaje);
         int posClase=0,posRaza=0;
-        pj = (Personaje) ComunicadorDePersonajes.getMensaje();
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
+        this.pj = obtenerPersonaje(getIntent().getStringExtra("idPersonaje"));
         edtNombre = (EditText) findViewById(R.id.edt_personaje_nombre);
         spnClase = (Spinner) findViewById(R.id.spn_personaje_clase);
         spnRaza = (Spinner) findViewById(R.id.spn_personaje_raza);
@@ -124,5 +128,31 @@ public class editarPersonaje extends AppCompatActivity {
         }
         finish();
 
+    }
+
+    public Personaje obtenerPersonaje(String id){
+        Personaje pj=null;
+        Cursor listaPersonajes = datos.obtenerPersonaje(id);
+        try {
+             if(listaPersonajes.moveToNext()) {
+                pj=new Personaje(listaPersonajes.getString(0),listaPersonajes.getString(1),
+                        listaPersonajes.getString(2),listaPersonajes.getString(3));
+            }
+        }finally {
+            listaPersonajes.close();
+
+        }
+        return pj;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: //hago un case por si en un futuro agrego mas opciones
+                Log.i("ActionBar", "Atrás!");
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

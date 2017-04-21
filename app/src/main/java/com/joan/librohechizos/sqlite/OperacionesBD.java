@@ -120,7 +120,7 @@ public final class OperacionesBD {
         };
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
 
         return resultado;
     }
@@ -164,6 +164,40 @@ public final class OperacionesBD {
 
         return resultado;
 
+    }
+
+    public Cursor obtenerHechizo(String idHechizo){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String seleccion=String.format("%s =? ",Tablas.HECHIZOS+"."+Hechizos.ID_HECHIZO);
+        String[] selectionArgs = {idHechizo};
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s ",
+                Tablas.HECHIZOS,
+                Tablas.HECHIZOS_POR_CLASE, Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_HECHIZO,
+                Tablas.CLASE, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_CLASE, Tablas.CLASE + "." + Clases.ID_CLASE);
+        String[] proyeccion = {
+                Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO + " AS " + Tablas.HECHIZOS,
+                Tablas.HECHIZOS + "." + Hechizos.NOMBRE,
+                Tablas.HECHIZOS + "." + Hechizos.DESCRIPCION,
+                Tablas.HECHIZOS + "." + Hechizos.A_MAYOR_NIVEL,
+                Tablas.HECHIZOS + "." + Hechizos.RANGO,
+                Tablas.HECHIZOS + "." + Hechizos.COMPONENTE_VERBAL,
+                Tablas.HECHIZOS + "." + Hechizos.COMPONENTE_SOMATICO,
+                Tablas.HECHIZOS + "." + Hechizos.COMPONENTE_MATERIAL,
+                Tablas.HECHIZOS + "." + Hechizos.DESCRIPCION_COMPONENTE,
+                Tablas.HECHIZOS + "." + Hechizos.RITUAL,
+                Tablas.HECHIZOS + "." + Hechizos.CONCENTRACION,
+                Tablas.HECHIZOS + "." + Hechizos.TIEMPO_DE_CASTEO,
+                Tablas.HECHIZOS + "." + Hechizos.ESCUELA,
+                Tablas.HECHIZOS + "." + Hechizos.NIVEL,
+                Tablas.HECHIZOS + "." + Hechizos.DURACION,
+                Tablas.CLASE+ "." + Clases.ID_CLASE,
+                Tablas.CLASE + "." + Clases.NOMBRE
+        };
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, seleccion, selectionArgs , null, null, null );
+
+        return resultado;
     }
 
     public Cursor obtenerEscuela(String idEscuela) {
@@ -232,7 +266,7 @@ public final class OperacionesBD {
         String[] seleccionArg = {idPersonaje};
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
 
         return resultado;
     }
@@ -273,7 +307,7 @@ public final class OperacionesBD {
         String[] seleccionArg = {idPersonaje};
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
 
         return resultado;
     }
@@ -301,6 +335,15 @@ public final class OperacionesBD {
         valores.put(HechizosAprendidos.PREPARADO, 0);
         getDb().insertOrThrow(Tablas.HECHIZOS_APRENDIDOS, null, valores);
 
+    }
+
+    public void dejarDePreparaHechizo(String idHechizo,String idPersonaje){
+        SQLiteDatabase db = baseDatos.getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put(HechizosAprendidos.PREPARADO, 0);
+        String whereClause = String.format("%s=? AND %s=?", HechizosAprendidos.ID_PERSONAJE, HechizosAprendidos.ID_HECHIZO);
+        String[] whereArgs = {idPersonaje, idHechizo};
+        db.update(Tablas.HECHIZOS_APRENDIDOS, valores, whereClause, whereArgs);
     }
 
     public void prepararHechizo(String idPersonaje, String idHechizo) {

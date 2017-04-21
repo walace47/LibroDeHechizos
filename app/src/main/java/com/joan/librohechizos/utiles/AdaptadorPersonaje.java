@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joan.librohechizos.R;
+import com.joan.librohechizos.modelo.Clase;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.ui.ListarPersonajes;
 
@@ -40,12 +41,32 @@ public class AdaptadorPersonaje extends ArrayAdapter<Personaje> {
         TextView raza = (TextView) item.findViewById(R.id.txt_raza);
         raza.setText(lista.get(position).getIdRaza());
         ImageView imagen=(ImageView) item.findViewById(R.id.imageView);
-        imagen.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Toast.makeText(getContext(), lista.get(position).getIdPersonaje(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        switch (lista.get(position).getIdClase()){
+            case("Paladin"):imagen.setImageResource(R.drawable.paladin);
+                break;
+            case("Picaro"):imagen.setImageResource(R.drawable.picaro);
+                break;
+            case("Guerrero"):imagen.setImageResource(R.drawable.guerrero);
+                break;
+            case("Mago"):imagen.setImageResource(R.drawable.mago);
+                break;
+            case("Hechicero"):imagen.setImageResource(R.drawable.hechicero);
+                break;
+            case("Brujo"):imagen.setImageResource(R.drawable.brujo);
+                break;
+            case("Explorador"):imagen.setImageResource(R.drawable.explorador);
+                break;
+            case("Monje"):imagen.setImageResource(R.drawable.monje);
+                break;
+            case("Druida"):imagen.setImageResource(R.drawable.druida);
+                break;
+            case("Clerigo"):imagen.setImageResource(R.drawable.clerigo);
+                break;
+            case("Bardo"):imagen.setImageResource(R.drawable.bardo);
+                break;
+            case("Barbaro"):imagen.setImageResource(R.drawable.barbaro);
+                break;
+        }
         return item;
     }
 

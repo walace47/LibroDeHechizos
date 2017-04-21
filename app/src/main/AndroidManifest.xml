@@ -24,8 +24,9 @@
         android:label="@string/activity_crear_personaje"
         android:parentActivityName=".ui.ListarPersonajes" />
     <activity android:name=".ui.MostrarHechizo" />
-    <activity android:name=".ui.LibroDeHechizos"/>
-        <activity android:name=".ui.editarPersonaje">
+    <activity android:name=".ui.LibroDeHechizos"
+        android:finishOnTaskLaunch="true"/>
+        <activity android:name=".ui.EditarPersonaje">
     </activity>
 
 </application>

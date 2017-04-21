@@ -39,7 +39,7 @@ public class FiltroHechizo {
     public FiltroHechizo(LibroDeHechizos context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        popView = layoutInflater.inflate(R.layout.filtros_de_hechizos, null);
+        popView = layoutInflater.inflate(R.layout.filtro, null);
         popupWindow = new PopupWindow(popView, RadioGroup.LayoutParams.MATCH_PARENT,
                 RadioGroup.LayoutParams.WRAP_CONTENT);
         //popupWindow.setHeight(100);
@@ -100,7 +100,6 @@ public class FiltroHechizo {
 
     private void funcionalidadBotonAplicarFiltro() {
         btnAplicar.setOnClickListener(new Button.OnClickListener() {
-            ArrayList<String> argumentosDeLaConsulta;
 
             @Override
             public void onClick(View v) {

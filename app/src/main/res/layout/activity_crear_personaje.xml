@@ -26,16 +26,17 @@
         android:textSize="18sp" />
 
     <TextView
-        android:text="Clase"
+        android:id="@+id/txt_clase"
         android:layout_width="93dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_clase"
-        android:layout_below="@+id/edt_personaje_nombre"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/edt_personaje_nombre"
         android:layout_marginBottom="10dp"
-        android:textSize="20sp" />
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:text="Clase"
+        android:textSize="14sp" />
 
     <Spinner
         android:id="@+id/spn_personaje_clase"
@@ -47,20 +48,21 @@
         android:layout_marginBottom="10dp"
         android:padding="5dp"
         android:saveEnabled="false"
-        android:scrollbarSize="18dp"
+        android:scrollbarSize="16dp"
 
-    />
+        />
 
 
     <TextView
-        android:text="Raza"
+        android:id="@+id/txt_raza"
         android:layout_width="109dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spn_personaje_clase"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/txt_raza"
-        android:textSize="20sp" />
+        android:layout_below="@+id/spn_personaje_clase"
+        android:paddingLeft="10dp"
+        android:text="Raza"
+        android:textSize="14sp" />
 
     <Spinner
         android:id="@+id/spn_personaje_raza"
@@ -71,19 +73,20 @@
         android:layout_below="@+id/txt_raza"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
-        android:scrollbarSize="18dp"
+        android:scrollbarSize="16dp"
 
-    />
+        />
 
     <Button
         android:id="@+id/btn_personaje_crear"
-        android:layout_width="wrap_content"
+        android:layout_width="52dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_weight="0.09"
         android:background="@android:drawable/ic_menu_save"
         android:backgroundTint="@color/colorPrimary"
+        android:elevation="0dp"
+        android:gravity="center"
         android:onClick="btnPersonajeCrear"
         android:textColor="@android:color/holo_green_dark"
         android:textColorLink="@color/colorPrimaryDark" />
