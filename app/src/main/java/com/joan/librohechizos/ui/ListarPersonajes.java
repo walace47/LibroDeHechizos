@@ -46,16 +46,9 @@ public class ListarPersonajes extends AppCompatActivity {
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                   // ComunicadorDePersonajes.setMensaje(lista.get(i));
-                    Intent intent = new Intent(ListarPersonajes.this, LibroDeHechizos.class);
+                Intent intent = new Intent(ListarPersonajes.this, LibroDeHechizos.class);
                 intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-
                 intent.putExtra("idPersonaje",lista.get(i).getIdPersonaje());
-
-                //PendingIntent pi = PendingIntent.getActivity(ListarPersonajes.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//                Toast.makeText(getApplicationContext(),
-    //                        lista.get(i).getIdPersonaje(), Toast.LENGTH_SHORT).show();
                    startActivity(intent);
             }
 
