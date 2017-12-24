@@ -7,6 +7,7 @@
         android:id="@+id/nivel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorSeparador"
         android:paddingLeft="15dp"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"

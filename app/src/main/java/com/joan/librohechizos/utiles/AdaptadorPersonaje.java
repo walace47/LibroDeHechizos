@@ -21,8 +21,8 @@ import java.util.ArrayList;
  */
 public class AdaptadorPersonaje extends ArrayAdapter<Personaje> {
 
-    AppCompatActivity appCompatActivity;
-    ArrayList<Personaje> lista;
+    protected AppCompatActivity appCompatActivity;
+    protected ArrayList<Personaje> lista;
 
    public  AdaptadorPersonaje(AppCompatActivity context, ArrayList<Personaje> lista) {
         super(context, R.layout.icono_personaje, lista);
@@ -35,7 +35,14 @@ public class AdaptadorPersonaje extends ArrayAdapter<Personaje> {
         LayoutInflater inflater = appCompatActivity.getLayoutInflater();
         item=inflater.inflate(R.layout.icono_personaje,null);
         TextView nombre = (TextView) item.findViewById(R.id.txt_personaje_nombre);
-        nombre.setText(lista.get(position).getNombre());
+        String nom=lista.get(position).getNombre();
+        if (!nom.equals("")) {
+            String primerletra = String.valueOf(nom.charAt(0));
+            nom = nom.substring(1);
+            nom = primerletra.toUpperCase() + nom;
+            //nom=nom.replace(primerletra,primerletra.toUpperCase());
+            nombre.setText(nom);
+        }
         TextView clase = (TextView) item.findViewById(R.id.txt_clase);
         clase.setText(lista.get(position).getIdClase());
         TextView raza = (TextView) item.findViewById(R.id.txt_raza);

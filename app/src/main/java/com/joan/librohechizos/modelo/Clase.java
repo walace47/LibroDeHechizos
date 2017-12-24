@@ -1,13 +1,17 @@
 package com.joan.librohechizos.modelo;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.Context;
+import android.database.Cursor;
 
-/**
- * Created by Giuliano on 07/03/2017.
- */
+import com.joan.librohechizos.Interfazes.Listable;
+import com.joan.librohechizos.sqlite.OperacionesBD;
 
-public class Clase {
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+
+
+public class Clase implements Listable {
 
     private String idClase;
     private String nombre;
@@ -35,6 +39,39 @@ public class Clase {
     @Override
     public String toString(){
         return this.nombre;
+    }
+
+    // Retorna las clases
+    public static LinkedList<Listable> getClases(Context contexto){
+        OperacionesBD datos;
+        datos = OperacionesBD.obtenerInstancia(contexto);
+        Cursor cursorClases;
+        LinkedList<Listable> clases = new LinkedList<>();
+        try {
+            datos.getDb().beginTransaction();
+            cursorClases = datos.obtenerClases();
+            while (cursorClases.moveToNext()) {
+                clases.add(new Clase(cursorClases.getString(0), cursorClases.getString(1)));
+            }
+            datos.getDb().setTransactionSuccessful();
+        } finally {
+            datos.getDb().endTransaction();
+        }
+       return clases;
+    }
+
+    public static void obtener(Clase clase){
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Clase clase = (Clase) o;
+
+        return idClase.equals(clase.idClase);
     }
 
 }

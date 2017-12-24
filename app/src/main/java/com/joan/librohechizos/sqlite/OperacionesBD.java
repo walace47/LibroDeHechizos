@@ -27,9 +27,11 @@ public final class OperacionesBD {
     }
 
     public static OperacionesBD obtenerInstancia(Context contexto) {
-        if (baseDatos == null) {
+
             baseDatos = new LibroHechizosBD(contexto);
-        }
+
+
+
         return instancia;
     }
 
@@ -125,6 +127,27 @@ public final class OperacionesBD {
         return resultado;
     }
 
+    public Cursor obtenerHechizos2(String filtro) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s ",
+                Tablas.HECHIZOS,
+                Tablas.HECHIZOS_POR_CLASE, Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_HECHIZO,
+                Tablas.CLASE, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_CLASE, Tablas.CLASE + "." + Clases.ID_CLASE);
+        String[] proyeccion = {
+                Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO + " AS " + Tablas.HECHIZOS,
+                Tablas.HECHIZOS + "." + Hechizos.NOMBRE,
+                Tablas.HECHIZOS + "." + Hechizos.RITUAL,
+                Tablas.HECHIZOS + "." + Hechizos.ESCUELA,
+                Tablas.HECHIZOS + "." + Hechizos.NIVEL,
+        };
+        builder.setTables(tablas);
+        builder.setDistinct(true);
+        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+
+        return resultado;
+    }
+
 
     public Cursor obtenerRazas() {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
@@ -156,8 +179,11 @@ public final class OperacionesBD {
         String[] proyeccion = {
                 Personajes.ID_PERSONAJE,
                 Tablas.PERSONAJE + "." + Personajes.NOMBRE,
-                Tablas.CLASE + "." + Clases.NOMBRE + " AS " + Tablas.CLASE,
-                Tablas.RAZA + "." + Razas.NOMBRE + " AS " + Tablas.RAZA};
+                Tablas.CLASE + "." + Clases.NOMBRE,
+                Tablas.CLASE + "."+  Clases.ID_CLASE,
+                Tablas.RAZA + "." + Razas.NOMBRE,
+                Tablas.RAZA + "." + Razas.ID_RAZA
+                                 };
 
         builder.setTables(tablas);
         Cursor resultado = builder.query(db, proyeccion, selection, selectionArgs, null, null, null);
@@ -356,17 +382,16 @@ public final class OperacionesBD {
         db.update(Tablas.HECHIZOS_APRENDIDOS, valores, whereClause, whereArgs);
     }
 
-    public void editarPersonaje(String idPersonaje,String nombre,String raza,String clase){
+    public void editarPersonaje(Personaje pj){
         SQLiteDatabase db = baseDatos.getWritableDatabase();
-
         ContentValues valores = new ContentValues();
-        valores.put(Personajes.ID_CLASE, clase);
-        valores.put(Personajes.NOMBRE, nombre);
-        valores.put(Personajes.ID_RAZA, raza);
+        valores.put(Personajes.ID_CLASE, pj.getIdClase());
+        valores.put(Personajes.NOMBRE, pj.getNombre());
+        valores.put(Personajes.ID_RAZA, pj.getIdRaza());
 
         String selection = String.format("%s=? ",
                 Personajes.ID_PERSONAJE);
-        final String[] whereArgs = {idPersonaje};
+        final String[] whereArgs = {pj.getIdPersonaje()};
         db.update(Tablas.PERSONAJE, valores, selection, whereArgs);
 
     }

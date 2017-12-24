@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 /**
  * Created by Giuliano on 06/03/2017.
@@ -29,7 +30,7 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "librohechizos.sqlite";
 
-    private static final int VERSION_ACTUAL = 1;
+    private static final int VERSION_ACTUAL = 10;
 
     private final Context contexto;
 
@@ -37,6 +38,7 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         super(context, NOMBRE_BASE_DATOS, null, VERSION_ACTUAL);
         this.contexto = context;
     }
+
 
     interface Tablas {
         String PERSONAJE = "personaje";
@@ -83,13 +85,19 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
             //se cargan las clases
             precargarClases(db);
             //se cargan las razas
-            db.execSQL("INSERT INTO raza(nombre) values('draconido')");
-            db.execSQL("INSERT INTO raza(nombre) values('humano')");
-            db.execSQL("INSERT INTO raza(nombre) values('gnomo')");
-            db.execSQL("INSERT INTO raza(nombre) values('mediano')");
-            db.execSQL("INSERT INTO raza(nombre) values('enano')");
-            db.execSQL("INSERT INTO raza(nombre) values('elfo')");
-            db.execSQL("INSERT INTO raza(nombre) values('genazi')");
+            db.execSQL("INSERT INTO raza(nombre) values('Draconido')");
+            db.execSQL("INSERT INTO raza(nombre) values('Humano')");
+            db.execSQL("INSERT INTO raza(nombre) values('Gnomo')");
+            db.execSQL("INSERT INTO raza(nombre) values('Mediano')");
+            db.execSQL("INSERT INTO raza(nombre) values('Enano')");
+            db.execSQL("INSERT INTO raza(nombre) values('Elfo')");
+            db.execSQL("INSERT INTO raza(nombre) values('Genazi')");
+            db.execSQL("INSERT INTO raza(nombre) values('Tiefling')");
+            db.execSQL("INSERT INTO raza(nombre) values('Semi-orco')");
+            db.execSQL("INSERT INTO raza(nombre) values('Semi-elfo')");
+            db.execSQL("INSERT INTO raza(nombre) values('Kobold')");
+            db.execSQL("INSERT INTO raza(nombre) values('Orco')");
+            db.execSQL("INSERT INTO raza(nombre) values('Goliat')");
             //se carga personaje de prueba
             db.execSQL("INSERT INTO personaje(nombre,id_clase,id_raza) values('leonidas',3,2)");
             //se cargan escuelas
@@ -102,81 +110,17 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
             db.execSQL(String.format("INSERT INTO %s(%s, %s) values(7,'transmutacion')", Tablas.ESCUELA, Escuelas.ID_ESCUELA, Escuelas.NOMBRE));
             db.execSQL(String.format("INSERT INTO %s(%s, %s) values(8,'adivinacion')", Tablas.ESCUELA, Escuelas.ID_ESCUELA, Escuelas.NOMBRE));
             //se cargan hechizos
-            precargarHechizos(db);
 
-            precargarHechizoscsv(db);
+            precargarHechizoscsv(db,"assets/Hechizosl.csv");
             // db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,4)");
             //db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (17,5)");
 
-            precargarHechizosXclaseCsv(db);
+            precargarHechizosXclaseCsv(db,"assets/HechizoxClase.csv");
+            precargarHechizoscsvNuevos(db);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
-    }
-
-    public void precargarHechizos(SQLiteDatabase db) {
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Umbral [Gate]', 'Conjuras un portal que une un espacio desocupado que puedas ver dentro del alcance a una ubicación precisa en un diferente plano de existencia. El portal es una abertura circular, que puedes hacer desde 5 hasta 20 pies (1 casilla hasta 4 casillas, 1.5 hasta 6 m) de diámetro. Puedes orientar el portal en cualquierdirección que elijas. El portal se mantiene por toda la duración del conjuro. El portal tiene una parte frontal y una parte trasera de cada plano donde esta aparece. Viajar a través del portal solo es posible moviéndose a través del frente. Cualquier cosa que lo haga es instantáneamente transportada al otro plano, apareciendo en el espacio desocupado más cercano del portal. Las Deidades y otros gobernantes planares pueden prevenir portales creados por este conjuro de abrirse en su presencia o en cualquier lugar de sus dominios. Cuando este conjuro es lanzado, puedes decir el nombre de una criatura especifica (un seudónimo, titulo, o un apodo no funcionan). Si la criatura está en otro plano que no sea en el que te encuentras, el portal se abre en los alrededores de la criatura nombrada y trae a la criatura hacia el espacio desocupado más cercano de tu lado del portal. No ganas ningún poder especial sobre la criatura y esta es libre de actuar como el DM lo juzgue apropiado. Podría irse, atacarte o ayudarte.', '', 60, 1, 1, 1, 'Un diamante con un valor mínimo de 5000po', 0, 1, '1 acción', 1, 9, 'hasta 1 minuto')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (1,10)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (1,4)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (1,5)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Ver lo invisible [See Invisibility]', 'Puedes ver criaturas y objetos como si fueran visibles, y puedes ver dentro del Plano Etéreo." +
-                "Las criaturas etéreas y los objetos aparecen en forma espectral y son translúcidas.', '', 0, 1, 1, 1, 'Una pizca de talco o un poco de plata pulverizada', 0, 0, '1 acción', 8, 2, '1 hora')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (2,11)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (2,5)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (2,4)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Viajar mediante plantas [Transport Via" +
-                "Plants]', 'El conjuro crea un vínculo mágico entre una planta inanimada grande o mayor, dentro del alcance, y otra planta, a cualquier distancia, en el mismo plano de existencia. Debes haber visto o tocado la planta destino al menos una" +
-                "vez anteriormente. Durante la duración, cualquier criatura puede caminar dentro de la planta objetivo y salir por la planta de destino usando 5 pies (1 casilla, 1.5 m) de movimiento.', '', 10, 1, 1, 0, '', 0, 0, '1 acción', 1, 6, '1 turno')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (3,9)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Vida falsa [False Life]', 'Te fortaleces a ti mismo con una copia nigromántica de vida, ganas 1d4 + 4 Puntos de Golpe temporales mientras dure el conjuro.', 'Cuando lanzas este hechizo usando un espacio de conjuros de nivel 2 o superior, ganas 5 Puntos de Golpe temporales adicionales por cada nivel de espacio de conjuros por encima de nivel 1.', 0, 1, 1, 1, 'Una pequeña cantidad de alcohol o licores destilados', 0, 0, '1 acción', 6, 1,'1 hora')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (4,5)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (4,4)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Vínculo protector [Warding Bond]', 'Este conjuro protege a una criatura voluntaria que toques y crea una conexión mística entre el objetivo y tú hasta que el conjuro finalice. Mientras el objetivo se encuentre a 60 pies (12 casillas, 18 m) de ti, gana +1 de bonificación a la CA, en las tiradas de salvación, y tiene resistencia a todo el daño. También, cada vez que" +
-                "sufra daño, tú sufres la misma cantidad. El conjuro finaliza si caes a 0 Puntos de Golpe o si el objetivo y tú estáis separados" +
-                "más de 60 pies (12 casillas, 18 m). También finaliza si el conjuro es lanzado otra vez a cualquiera de las criaturas conectadas. Además puedes cancelar el conjuro como una acción.', '', 1, 1, 1, 1, 'Un par de anillos de platino de al menos 50 po de valor cada uno, los cuáles llevaréis tu objetivo y tú', 0, 0, '1 acción', 3, 2, '1 hora')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (5,10)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Virote encantado [Witch Bolt]', 'Un haz de chisporroteante energía azul es lanzado hacia una criatura dentro del alcance," +
-                "formando un constante arco de relámpago entre el objetivo y tú. Haz un ataque de conjuro a distancia contra esa criatura. En un impacto, el objetivo sufre 1d12 puntos de daño por electricidad, y en cada uno de tus turnos mientras dure, puedes usar tu acción para realizar 1d12 puntos de daño por electrcidad al objetivo automáticamente. Este conjuro finaliza si usas tu acción para hacer otra cosa. Este conjuro también finaliza si el objetivo está alguna vez fuera del alcance del conjuro o si tiene cobertura total de ti.', 'Cuando lanzas este" +
-                "hechizo usando un espacio de conjuros de nivel 2 o superior, el daño inicial se incrementa en 1d12 por cada nivel de espacio de conjuros por encima de nivel 1.', 30, 1, 1, 1, 'Una ramita de un árbol que ha sido alcanzada por un rayo', 0, 1, '1 acción', '2', 1, 'hasta 1 minuto')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (6,4)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (6,6)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Visión en la oscuridad [Darkvision]', 'Tocas a una criatura voluntaria para concederle la habilidad de ver en la oscuridad. Durante la duración del conjuro, la criatura elegida puede ver en la oscuridad hasta un alcance de 60 pies (12 casillas, 18 m).', '', 1, 1, 1, 1, 'Una pizca de zanahoria o un ágata', 0, 0, '1 acción', 7, 2, '8 horas')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (7,7)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (7,5)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (7,4)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (7,9)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Visión verdadera [True Seeing]', 'Este conjuro proporciona a la criatura voluntaria que tocas, la habilidad de ver las cosas" +
-                "como realmente son. Mientras dure el conjuro, la criatura tiene visión verdadera, se da cuenta de puertas secretas ocultas por magia, y puede ver en el Plano Etéreo, todo en un alcance de 120 pies (24 casillas, 36 m).', '', 1, 1, 1, 1, 'Un ungüento para los ojos de 25po de valor; está hecho de polvo de setas, azafrán y grasa; que el conjuro consume', 0, 0, '1 acción', 8, 6, '1 hora')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (8,10)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (8,11)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (8,6)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (8,5)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (8,4)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Volar [Fly]', 'Tocas a una criatura voluntaria. El objetivo gana una velocidad de vuelo de 60 pies (12 casillas, 18 m) durante la duración del conjuro. Cuando el conjuro finaliza, si el objetivo aún está en el aire, cae a menos que pueda detener la caída.', 'Cuando lanzas este hechizo usando un espacio de conjuros de nivel 4 o superior, puedes elegir una criatura" +
-                "adicional como objetivo por cada nivel de espacio de conjuros por encima de nivel 3', 1, 1, 1, 1, 'La pluma del ala de cualquier ave', 0, 1, '1 acción', 7, 3, 'hasta 10 minuto')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (9,4)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (9,5)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (9,6)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Zancada arbórea [Tree Stride]', 'Adquieres la habilidad de entrar en un árbol y moverte desde dentro del mismo hasta dentro de otro árbol del mismo tipo que se encuentre hasta a 500 pies (100 casillas, 150 m). Los dos árboles deben estar vivos y al menos tan grandes como tú. Debes usar 5 pies (1 casilla, 1.5m) de movimiento para entrar en el árbol. Conoces instantáneamente la localización de todos los árboles del mismo tipo a 500 pies (100 casillas, 150 m) de distancia y, como parte del movimiento usado para entrar en el árbol, puedes pasar dentro de uno de esos árboles o salir del árbol en el que estás. Apareces en un punto de tu elección a 5 pies (1 casilla, 1.5 m) del árbol destino, usando otros 5 pies (1 casilla, 1.5 m) de movimiento. Si no tienes suficiente movimiento, apareces a 5 pies (1 casilla, 1.5 m) del árbol en el que has entrado. Puedes usar esta habilidad de transporte una vez por asalto durante la duración. Debes terminar cada turno fuera de un árbol.', '', 0, 1, 1, 0, '', 0, 1, '1 acción', 1, 5, 'hasta 1 minuto')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (10,7)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (10,9)");
-
-        db.execSQL("INSERT INTO hechizos(nombre, descripcion, a_mayor_nivel, rango, componente_verbal, componente_somatico, componente_material, descripcion_componente, ritual, concentracion, tiempo_de_casteo, escuela, nivel, duracion) VALUES ('Zona de verdad [Zone of Truth]', 'Creas una zona mágica que protege contra el engaño en una esfera de 15 pies (3 casillas, 4.5. m) de radio centrado en un lugar de tu elección dentro del alcance. Hasta que el conjuro finalice, una criatura que entre en el área del conjuro por primera vez en un turno o empiece su turno allí debe realizar una tirada de salvación de Carisma. Con una salvación fracasada, la criatura no puede decir una mentira deliberada mientras esté en el radio. Tú sabes si cada criatura hace la tirada de salvación con éxito o si la falla. Una criatura afectada es consciente del conjuro y por consiguiente puede evitar responder preguntas las cuales normalmente respondería con una mentira. Una criatura puede ser evasiva en sus respuestas siempre y cuando permanezca dentro del límite de la verdad.', '', 60, 1, 1, 0, '', 0, 0, '1 acción', 1, 2, '10 minutos')");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (11,11)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (11,10)");
-        db.execSQL("INSERT INTO " + Tablas.HECHIZOS_POR_CLASE + "(" + HechizosPorClases.ID_HECHIZO + "," + HechizosPorClases.ID_CLASE + ") VALUES (11,2)");
-
-
     }
 
 
@@ -200,8 +144,8 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         }
     }
 
-    public void precargarHechizoscsv(SQLiteDatabase db) {
-        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Hechizosl.csv");
+    public void precargarHechizoscsv(SQLiteDatabase db,String archivo) {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream(archivo);
         BufferedReader buffer = null;
         try {
             buffer = new BufferedReader(new InputStreamReader(inStream, "cp1252"));
@@ -243,31 +187,222 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         }
     }
 
-
-    public void precargarHechizosXclaseCsv(SQLiteDatabase db) {
-        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/HechizoxClase.csv");
-        ;
-
+    public void precargarHechizoscsvNuevos(SQLiteDatabase db) {
+        HashMap<String, String[]> mapa = new HashMap<>();
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/HechizosElemental.csv");
         BufferedReader buffer = null;
         try {
             buffer = new BufferedReader(new InputStreamReader(inStream, "cp1252"));
+        } catch (UnsupportedEncodingException e) {
+            System.out.printf("no anda");
+            e.printStackTrace();
+        }
+        String line = "";
+        try {
+            while ((line = buffer.readLine()) != null) {
+                String[] colums = line.split(";");
+                if (colums.length == 9) {
+                    String[] arregloHechizo;
+                    String componente_V = "0", componente_M = "0", componente_S = "0", accion, distancia, nombre,
+                            nivel, escuela, ritual = "0", concentracion = "0", duracion, descripcion, aNuevoNivel = "", material = "", clase;
+                    nombre = colums[1].trim();
+                    nombre = nombre.toLowerCase();
+                    Character primer = nombre.charAt(0);
+                    nombre = primer.toString().toUpperCase() + nombre.substring(1,nombre.length());
+                    if (nombre.contains("RITUAL")) {
+                        ritual = "1";
+                        nombre = nombre.substring(0, nombre.indexOf("(") - 1);
+                    }
+                    if (!mapa.containsKey(nombre)) {
+                        nivel = colums[0].trim();
+                        escuela = colums[2].trim();
+                        if (escuela.contains("Conjuración")) {
+                            escuela = "1";
+                        } else if (escuela.contains("Evocación")) {
+                            escuela = "2";
+                        } else if (escuela.contains("Abjuración")) {
+                            escuela = "3";
+                        } else if (escuela.contains("Ilusión")) {
+                            escuela = "4";
+                        } else if (escuela.contains("Encantamiento")) {
+                            escuela = "5";
+                        } else if (escuela.contains("Nigromancia")) {
+                            escuela = "6";
+                        } else if (escuela.contains("Transmutación")) {
+                            escuela = "7";
+                        } else if (escuela.contains("Adivinación")) {
+                            escuela = "8";
+                        }
+                        accion = colums[3].trim();
+                        distancia = colums[4].trim();
+                        if (distancia.contains("pies")) {
+                            distancia = distancia.substring(0, distancia.indexOf('p') - 1);
+                        } else {
+                            if (distancia.contains("Personal")) {
+                                distancia = "0";
+                            } else {
+                                if (distancia.contains("Contacto")) {
+                                    distancia = "1";
+
+                                } else {
+                                    distancia = "-1";
+                                }
+                            }
+                        }
+                        if (colums[5].contains("V")) {
+                            componente_V = "1";
+                        }
+                        if (colums[5].contains("M")) {
+                            componente_M = "1";
+                        }
+                        if (colums[5].contains("S")) {
+                            componente_S = "1";
+                        }
+                        duracion = colums[6].trim();
+                        if (duracion.contains("Concentración")) {
+                            duracion = duracion.replace("Concentración, ", "");
+                            concentracion = "1";
+                        }
+                        descripcion = colums[7].trim();
+                        if (componente_M.equals("1")) {
+                            material = descripcion.substring(descripcion.indexOf("("), descripcion.indexOf(")"));
+                            descripcion = descripcion.substring(descripcion.indexOf(")")+1);
+                        }
+                        if (descripcion.contains("El daño del conjuro se incrementa")) {
+                            aNuevoNivel = descripcion.substring(descripcion.indexOf("El daño del conjuro se incrementa"));
+                            descripcion = descripcion.substring(0, descripcion.indexOf("El daño del conjuro se incrementa") - 8);
+                        }else if(descripcion.contains("A niveles superiores.")){
+                            aNuevoNivel = descripcion.substring(descripcion.indexOf("A niveles superiores."));
+                            aNuevoNivel = aNuevoNivel.replace("A niveles superiores.","");
+                            descripcion = descripcion.substring(0, descripcion.indexOf("A niveles superiores") - 8);
+                        }
+                        descripcion = "<p> " + descripcion + " </p>";
+                        descripcion = descripcion.replaceAll("<br><br>", "</p><p>");
+                        descripcion = descripcion.replaceAll("<BR><BR>", "</p><p>");
+                        descripcion = descripcion.replaceAll("<BR><br>", "</p><p>");
+                        descripcion = descripcion.replaceAll("<br><BR>", "</p><p>");
+                        descripcion = descripcion.replaceAll("<BR>", "</p><p>");
+                        descripcion = descripcion.replaceAll("<br>", "</p><p>");
+                        descripcion.trim();
+                        //clase
+                        clase = colums[8].trim();
+                        if (clase.contains("Guerrero")) {
+                            clase = "1";
+                        } else if (clase.contains("Paladin")) {
+                            clase = "2";
+                        } else if (clase.contains("Picaro")) {
+                            clase = "3";
+                        } else if (clase.contains("Mago")) {
+                            clase = "4";
+                        } else if (clase.contains("Hechicero")) {
+                            clase = "5";
+                        } else if (clase.contains("brujo")) {
+                            clase = "6";
+                        } else if (clase.contains("Explorador")) {
+                            clase = "7";
+                        } else if (clase.contains("Monje")) {
+                            clase = "8";
+                        } else if (clase.contains("Druida")) {
+                            clase = "9";
+                        } else if (clase.contains("Clerigo")) {
+                            clase = "10";
+                        } else if (clase.contains("Bardo")) {
+                            clase = "11";
+                        } else if (clase.contains("Barbaro")) {
+                            clase = "12";
+                        }
+                        arregloHechizo = new String[]{nombre, descripcion, aNuevoNivel, distancia,
+                                componente_V, componente_S, componente_M, material, ritual, concentracion, accion,
+                                escuela, nivel, duracion, clase};
+                        mapa.put(nombre, arregloHechizo);
+                    } else {
+                        String[] hechizo = mapa.get(nombre);
+                        clase = colums[8].trim();
+                        if (clase.contains("Guerrero")) {
+                            hechizo[14] = hechizo[14]+ ",1";
+                        } else if (clase.contains("Paladin")) {
+                            hechizo[14] = hechizo[14] + ",2";
+                        } else if (clase.contains("Picaro")) {
+                            hechizo[14] = hechizo[14]+ ",3";
+                        } else if (clase.contains("Mago")) {
+                            hechizo[14] = hechizo[14]+ ",4";
+                        } else if (clase.contains("Hechicero")) {
+                            hechizo[14] = hechizo[14]+ ",5";
+                        } else if (clase.contains("brujo")) {
+                            hechizo[14] = hechizo[14]+ ",6";
+                        } else if (clase.contains("Explorador")) {
+                            hechizo[14] = hechizo[14]+ ",7";
+                        } else if (clase.contains("Monje")) {
+                            hechizo[14] = hechizo[14]+ ",8";
+                        } else if (clase.contains("Druida")) {
+                            hechizo[14] = hechizo[14]+ ",9";
+                        } else if (clase.contains("Clerigo")) {
+                            hechizo[14] = hechizo[14]+ ",10";
+                        } else if (clase.contains("Bardo")) {
+                            hechizo[14] = hechizo[14]+ ",11";
+                        } else if (clase.contains("Barbaro")) {
+                            hechizo[14] = hechizo[14]+ ",12";
+                        }
+                        //hechizo[14] = clase;
+                        //mapa.remove(hechizo[0]);
+                      //  mapa.put(hechizo[0], hechizo);
+                    }
+
+
+                }
+
+
+            }
+            int i = 800;
+            for (String[] value : mapa.values()) {
+                ContentValues cv = new ContentValues();
+                cv.put(Hechizos.ID_HECHIZO, i);
+                cv.put(Hechizos.NOMBRE, value[0].trim());
+                String descripcion = value[1].trim();
+                cv.put(Hechizos.DESCRIPCION, descripcion);
+                cv.put(Hechizos.A_MAYOR_NIVEL, value[2].trim());
+                cv.put(Hechizos.RANGO, value[3].trim());
+                cv.put(Hechizos.COMPONENTE_VERBAL, value[4].trim());
+                cv.put(Hechizos.COMPONENTE_SOMATICO, value[5].trim());
+                cv.put(Hechizos.COMPONENTE_MATERIAL, value[6].trim());
+                cv.put(Hechizos.DESCRIPCION_COMPONENTE, value[7].trim());
+                cv.put(Hechizos.RITUAL, value[8].trim());
+                cv.put(Hechizos.CONCENTRACION, value[9].trim());
+                cv.put(Hechizos.TIEMPO_DE_CASTEO, value[10].trim());
+                cv.put(Hechizos.ESCUELA, value[11].trim());
+                cv.put(Hechizos.NIVEL, value[12].trim());
+                cv.put(Hechizos.DURACION, value[13].trim());
+                db.insert(Tablas.HECHIZOS, null, cv);
+                String[] clases = value[14].split(",");
+                cv.clear();
+                for (int j = 0; j < clases.length; j++){
+                    cv.put(HechizosPorClases.ID_HECHIZO, i);
+                    cv.put(HechizosPorClases.ID_CLASE, clases[j].trim());
+                    db.insert(Tablas.HECHIZOS_POR_CLASE, null, cv);
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void precargarHechizosXclaseCsv(SQLiteDatabase db,String archivo) {
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream(archivo);
+        BufferedReader buffer = null;
+        try {
+            buffer = new BufferedReader(new InputStreamReader(inStream, "Cp1252"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         String line = "";
         try {
-            //buffer.readLine();
             while ((line = buffer.readLine()) != null) {
                 String[] colums = line.split("&");
-                // if (colums.length != 12) {
-                //   Log.d("CSVParser", "Skipping Bad CSV Row");
-                // continue;
-                // }
                 ContentValues cv = new ContentValues();
                 cv.put(HechizosPorClases.ID_HECHIZO, colums[0].trim());
                 cv.put(HechizosPorClases.ID_CLASE, colums[1].trim());
-
-
                 db.insert(Tablas.HECHIZOS_POR_CLASE, null, cv);
             }
         } catch (IOException e) {
@@ -344,13 +479,13 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion < oldVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + Tablas.PERSONAJE);
-            db.execSQL("DROP TABLE IF EXISTS " + Tablas.CLASE);
-            db.execSQL("DROP TABLE IF EXISTS " + Tablas.RAZA);
-            db.execSQL("DROP TABLE IF EXISTS " + Tablas.HECHIZOS);
-            db.execSQL("DROP TABLE IF EXISTS " + Tablas.HECHIZOS_APRENDIDOS);
-            db.execSQL("DROP TABLE IF EXISTS " + Tablas.HECHIZOS_POR_CLASE);
+
+        if (newVersion > oldVersion && oldVersion == 8) {
+            precargarHechizoscsvNuevos(db);
+        }
+        if (newVersion > oldVersion && oldVersion == 9){
+            precargarHechizoscsv(db,"assets/heroismo.txt");
+            precargarHechizosXclaseCsv(db,"assets/clases.txt");
         }
     }
 

@@ -1,9 +1,9 @@
 package com.joan.librohechizos.ui;
 
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,8 +18,6 @@ import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorPersonaje;
-import com.joan.librohechizos.utiles.ComunicadorDeHechizo;
-import com.joan.librohechizos.utiles.ComunicadorDePersonajes;
 
 import java.util.ArrayList;
 
@@ -29,19 +27,28 @@ public class ListarPersonajes extends AppCompatActivity {
     private ArrayList<Personaje> lista;
     private OperacionesBD datos;
     private ListView listaPersonajes;
+    ListView menu;
+    DrawerLayout drawerLayout;
+    //float firstTouchX;
+    //float firstTouchY;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.listar_personaje);
+        setContentView(R.layout.listar_personaje2);
         datos = OperacionesBD.obtenerInstancia(getApplicationContext());
         lista=new ArrayList<>();
         listaPersonajes = (ListView) findViewById(R.id.list_personajes);
         listaPersonajes.setAdapter(new AdaptadorPersonaje(ListarPersonajes.this,lista));
+        menu = (ListView) findViewById(R.id.menu);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        //personalizarMenu();
 
         cargarPersonajes();
-
         //metodo que se ejecuta cuando se clikea un personaje
         listaPersonajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,10 +90,7 @@ public class ListarPersonajes extends AppCompatActivity {
 
     }
 
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        this.setIntent(intent);
-    }
+
 
 
 
@@ -96,10 +100,19 @@ public class ListarPersonajes extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        if (item.getItemId()==R.id.action_nuevo){
-            Intent intent = new Intent(this, CrearPersonajeActivity.class);
-            startActivity(intent);
+        switch (item.getItemId()){
+            case(R.id.action_nuevo):
+                Intent intent = new Intent(this, CrearPersonaje.class);
+                startActivity(intent);
+                break;
+            case(R.id.donar):
+                intent = new Intent(getBaseContext(), Donacion.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
+
         return true;
     }
 
@@ -150,4 +163,26 @@ public class ListarPersonajes extends AppCompatActivity {
 
 
     }
+
+  /*
+   Por si implemento una barra al costado
+   public boolean onTouch(View v, MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                //Aqui guardas en una variable privada de clase las coordenadas del primer toque:
+                firstTouchX = event.getX();
+                firstTouchY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                //Aqui ya podemos determinar los tipos de movimientos:
+                if(firstTouchX > event.getX()){
+                    drawerLayout.closeDrawers();
+                }else{
+                    drawerLayout.openDrawer(menu);
+                }
+
+                break;
+        }
+        return true;
+    }*/
 }

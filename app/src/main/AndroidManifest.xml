@@ -2,33 +2,60 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.joan.librohechizos">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_librohechizos"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        <activity
+            android:name=".ui.ListarPersonajes"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <activity
-        android:name=".ui.ListarPersonajes"
-        android:label="@string/app_name">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.CrearPersonaje"
+            android:label="@string/activity_crear_personaje"
+            android:parentActivityName=".ui.ListarPersonajes"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ListarPersonajes" />
+        </activity>
+        <activity
+            android:name=".ui.MostrarHechizo"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.LibroDeHechizos" />
+        </activity>
+        <activity
+            android:name=".ui.LibroDeHechizos"
+            android:finishOnTaskLaunch="true"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ListarPersonajes" />
+        </activity>
+        <activity
+            android:name=".ui.EditarPersonaje"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.LibroDeHechizos"/>
+        </activity>
+        <activity android:name=".ui.Donacion">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ListarPersonajes" />
+        </activity>
+    </application>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".ui.CrearPersonajeActivity"
-        android:label="@string/activity_crear_personaje"
-        android:parentActivityName=".ui.ListarPersonajes" />
-    <activity android:name=".ui.MostrarHechizo" />
-    <activity android:name=".ui.LibroDeHechizos"
-        android:finishOnTaskLaunch="true"/>
-        <activity android:name=".ui.EditarPersonaje">
-    </activity>
-
-</application>
-
-    </manifest>
+</manifest>

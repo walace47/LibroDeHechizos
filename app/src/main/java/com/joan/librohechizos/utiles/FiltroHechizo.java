@@ -1,6 +1,5 @@
 package com.joan.librohechizos.utiles;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,8 @@ import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.ui.LibroDeHechizos;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -26,24 +27,26 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  */
 
 public class FiltroHechizo {
+
+    //cosas pendientes crear listas de chicksbox cant = 3 escuelas, concentracion,ritual y materiales.
     private Button btnAplicar, btnCerrar, btnLimpiar;
     private CheckBox evocacion, conjuracion, abjuracion, encantamiento, ilusion, transmutacion, necromancia,
             adivinacion, ritual, concentracion, verbal, somatica, material;
-    private Spinner clase, nivel;
+    private Spinner clase;
+    private MultiSelectionSpinner nivel;
     private View popView;
     private PopupWindow popupWindow;
     private OperacionesBD datos;
-    LibroDeHechizos context;
+    private LibroDeHechizos context;
 
 
     public FiltroHechizo(LibroDeHechizos context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        popView = layoutInflater.inflate(R.layout.filtro, null);
+        popView = layoutInflater.inflate(R.layout.filtro_de_hechizo, null);
         popupWindow = new PopupWindow(popView, RadioGroup.LayoutParams.MATCH_PARENT,
                 RadioGroup.LayoutParams.WRAP_CONTENT);
-        //popupWindow.setHeight(100);
-        //popupWindow.setWidth(WRAP_CONTENT);
+
         datos = OperacionesBD.obtenerInstancia(context);
         this.btnAplicar = (Button) popView.findViewById(R.id.btn_filtro_aplicar);
         this.btnCerrar = (Button) popView.findViewById(R.id.btn_cancelar_filtros);
@@ -62,8 +65,7 @@ public class FiltroHechizo {
         this.somatica = (CheckBox) popView.findViewById(R.id.ck_filtro_somatico);
         this.material = (CheckBox) popView.findViewById(R.id.ck_filtro_material);
         this.clase = (Spinner) popView.findViewById(R.id.spn_filtro_clase);
-        this.nivel = (Spinner) popView.findViewById(R.id.spn_filtro_nivel);
-
+        this.nivel = (MultiSelectionSpinner) popView.findViewById(R.id.spn_filtro_nivel);
         //se definen funcionalidades de los 3 botones
         funcionalidadBotonAplicarFiltro();
         funcionalidadBotonCerrarFiltro();
@@ -71,9 +73,12 @@ public class FiltroHechizo {
 
         //se llenan los spiners
         clase.setAdapter(cargarClases());
-        nivel.setAdapter(cargarNiveles());
-
+        String[] niveles = {"Truco", "Nivel 1", "Nivel 2", "Nivel 3", "Nivel 4", "Nivel 5", "Nivel 6",
+                "Nivel 7", "Nivel 8", "Nivel 9"};
+        nivel.setItems(niveles);
     }
+
+
 
     private void funcionalidadBotonLimpiarFiltro() {
         btnLimpiar.setOnClickListener(new Button.OnClickListener() {
@@ -81,9 +86,40 @@ public class FiltroHechizo {
             public void onClick(View v) {
                 context.setClickFiltro(false);
                 context.setFiltro("");
+                limpiarFiltros();
                 popupWindow.dismiss();
             }
         });
+    }
+
+    private void limpiarFiltros() {
+        List<CheckBox> ckBoxes = enListarCheckbox();
+        for (CheckBox each : ckBoxes) {
+            each.setChecked(false);
+        }
+        clase.setSelection(0);
+        nivel.setAllSelection(false);
+    }
+
+    private List<CheckBox> enListarCheckbox() {
+        LinkedList<CheckBox> ckBoxes = new LinkedList<>();
+        //escuelas
+        ckBoxes.add(this.abjuracion);
+        ckBoxes.add(this.adivinacion);
+        ckBoxes.add(this.conjuracion);
+        ckBoxes.add(this.encantamiento);
+        ckBoxes.add(this.evocacion);
+        ckBoxes.add(this.ilusion);
+        ckBoxes.add(this.necromancia);
+        ckBoxes.add(this.transmutacion);
+        //materiales...........................
+        ckBoxes.add(this.somatica);
+        ckBoxes.add(this.verbal);
+        ckBoxes.add(this.material);
+        //ritual concentracion
+        ckBoxes.add(this.ritual);
+        ckBoxes.add(this.concentracion);
+        return ckBoxes;
     }
 
 
@@ -113,45 +149,19 @@ public class FiltroHechizo {
 
     private String obtenerSeleccionYArgumentos() {
         //el primer elementos es la seleccion
+        int i;
         String seleccion;
         seleccion = "";
         ArrayList<String> argumentos = new ArrayList<>();
         Clase clase = (Clase) this.clase.getSelectedItem();
-        String nivel = (String) this.nivel.getSelectedItem();
-        if (!nivel.equals("Todos los niveles")) {
-            seleccion = Contratos.Hechizos.NIVEL + "=";
-            switch (nivel) {
-                case ("Truco"):
-                    seleccion = seleccion + "0";
-                    break;
-                case ("nivel 1"):
-                    seleccion = seleccion + "1";
-                    break;
-                case ("nivel 2"):
-                    seleccion = seleccion + "2";
-                    break;
-                case ("nivel 3"):
-                    seleccion = seleccion + "3";
-                    break;
-                case ("nivel 4"):
-                    seleccion = seleccion + "4";
-                    break;
-                case ("nivel 5"):
-                    seleccion = seleccion + "5";
-                    break;
-                case ("nivel 6"):
-                    seleccion = seleccion + "6";
-                    break;
-                case ("nivel 7"):
-                    seleccion = seleccion + "7";
-                    break;
-                case ("nivel 8"):
-                    seleccion = seleccion + "8";
-                    break;
-                case ("nivel 9"):
-                    seleccion = seleccion + "9";
-                    break;
+        List<Integer> nivel = this.nivel.getSelectedIndicies();
+        if (!nivel.isEmpty()) {
+            seleccion = "( ";
+            for (i = 0; i < nivel.size() - 1; i++) {
+                seleccion += Contratos.Hechizos.NIVEL + "=" + nivel.get(i) + " OR ";
             }
+            seleccion += Contratos.Hechizos.NIVEL + "=" + nivel.get(i) + ") ";
+
         }
         if (!clase.getNombre().equals("Todas Las Clases")) {
             if (!seleccion.equals("")) {
@@ -246,6 +256,7 @@ public class FiltroHechizo {
                 seleccion = seleccion + Contratos.Hechizos.CONCENTRACION + "=1";
             }
         }
+
         return seleccion;
     }
 
@@ -268,9 +279,10 @@ public class FiltroHechizo {
     private ArrayAdapter cargarNiveles() {
         String[] niveles = {"Todos los niveles", "Truco", "nivel 1", "nivel 2", "nivel 3", "nivel 4", "nivel 5", "nivel 6",
                 "nivel 7", "nivel 8", "nivel 9"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item, niveles);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, niveles);
         return adapter;
     }
+
 
     private ArrayAdapter cargarClases() {
         ArrayList<Clase> clases = new ArrayList<>();

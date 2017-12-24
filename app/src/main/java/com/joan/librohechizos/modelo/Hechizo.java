@@ -49,6 +49,36 @@ public class Hechizo  {
         this.clases=clases;
     }
 
+    public Hechizo( String nombre,String descripcion,String aMayorNivel,
+                   int rango,int componenteVerbal, int componenteSomatico, int componenteMaterial,
+                   String descripcionDelComponenteMaterial, int ritual, int concentracion,  String tiempoDeCasteo,
+                   Escuela escuela, int nivel, String duracion, ArrayList<Clase> clases) {
+        this.nombre = nombre;
+        this.rango = rango;
+        this.nivel = nivel;
+        this.escuela = escuela;
+        this.tiempoDeCasteo = tiempoDeCasteo;
+        this.duracion = duracion;
+        this.concentracion = concentracion;
+        this.ritual = ritual;
+        this.componenteVerbal = componenteVerbal;
+        this.componenteSomatico = componenteSomatico;
+        this.componenteMaterial = componenteMaterial;
+        this.descripcionDelComponenteMaterial = descripcionDelComponenteMaterial;
+        this.descripcion = descripcion;
+        this.aMayorNivel = aMayorNivel;
+        this.clases=clases;
+    }
+
+
+
+    public Hechizo(String idHechizo,String nombre, int ritual,Escuela escuela ,int nivel){
+        this.idHechizo= idHechizo;
+        this.nombre=nombre;
+        this.nivel=nivel;
+        this.ritual = ritual;
+        this.escuela = escuela;
+    }
     public Hechizo(String nombre,int nivel){
         this.nombre=nombre;
         this.nivel=nivel;

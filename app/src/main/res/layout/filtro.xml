@@ -1,226 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_light">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorFondo">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
         <Spinner
-            android:id="@+id/spn_filtro_clase"
+            android:id="@+id/spinner3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/btn_cancelar_filtros"
+            android:layout_gravity="start"
+            android:layout_weight="1" />
 
-            android:layout_toStartOf="@+id/btn_cancelar_filtros"
-            android:spinnerMode="dialog" />
+        <Spinner
+            android:id="@+id/spinner4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="1" />
 
-        <CheckBox
-            android:id="@+id/ck_filtro_verbal"
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spn_filtro_clase"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:text="Materiales:" />
 
-            android:layout_toLeftOf="@+id/textView3"
-            android:layout_toStartOf="@+id/textView3"
-            android:checked="false"
+        <CheckBox
+            android:id="@+id/checkBox3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="V" />
 
         <CheckBox
-            android:id="@+id/ck_filtro_somatico"
+            android:id="@+id/checkBox2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/ck_filtro_abjuracion"
-
-            android:layout_alignRight="@+id/ck_filtro_abjuracion"
-            android:layout_below="@+id/spn_filtro_clase"
-            android:checked="false"
+            android:layout_weight="1"
             android:text="S" />
 
         <CheckBox
-            android:id="@+id/ck_filtro_material"
+            android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="M" />
 
-            android:checked="false"
-            android:text="M"
-            android:layout_below="@+id/spn_filtro_nivel"
-            android:layout_toRightOf="@+id/ck_filtro_conjuracion"
-            android:layout_toEndOf="@+id/ck_filtro_conjuracion"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp" />
+    </TableRow>
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Materiales:"
-            android:layout_alignBaseline="@+id/ck_filtro_verbal"
-            android:layout_alignBottom="@+id/ck_filtro_verbal"
-            android:layout_alignRight="@+id/ck_filtro_adivinacion"
-            android:layout_alignEnd="@+id/ck_filtro_adivinacion" />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-        <CheckBox
-            android:id="@+id/ck_filtro_concentracion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ck_filtro_verbal"
-            android:checked="false"
-            android:text="Concentración"
-            android:textSize="15sp" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_ritual"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ck_filtro_somatico"
-            android:layout_toEndOf="@+id/ck_filtro_ilucion"
-            android:layout_toRightOf="@+id/ck_filtro_ilucion"
-            android:checked="false"
-            android:text="ritual"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:checked="true"
-            android:text="Escuelas"
-            android:layout_marginRight="7dp"
-            android:layout_marginEnd="7dp"
-            android:layout_below="@+id/ck_filtro_ritual"
-            android:layout_alignRight="@+id/ck_filtro_somatico"
-            android:layout_alignEnd="@+id/ck_filtro_somatico" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_conjuracion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ck_filtro_ilucion"
-            android:layout_alignStart="@+id/ck_filtro_ilucion"
-            android:layout_below="@+id/ck_filtro_ilucion"
-            android:checked="false"
-            android:text="Conjuración" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_evocacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/ck_filtro_encantamiento"
-            android:layout_alignBottom="@+id/ck_filtro_encantamiento"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:checked="false"
-            android:text="Evocación" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_encantamiento"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ck_filtro_ilucion"
-            android:layout_alignStart="@+id/ck_filtro_ilucion"
-            android:layout_below="@+id/textView3"
-            android:layout_marginTop="18dp"
-            android:checked="false"
-            android:text="Encantamiento" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_ilucion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ck_filtro_encantamiento"
-            android:layout_toEndOf="@+id/ck_filtro_concentracion"
-            android:layout_toRightOf="@+id/ck_filtro_concentracion"
-            android:checked="false"
-            android:text="Ilusión" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_abjuracion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ck_filtro_conjuracion"
-            android:layout_alignStart="@+id/ck_filtro_conjuracion"
-            android:layout_below="@+id/ck_filtro_conjuracion"
-            android:checked="false"
-            android:text="Abjuración" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_necromancia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ck_filtro_evocacion"
-            android:checked="false"
-            android:text="Necromancia" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_transmutacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ck_filtro_adivinacion"
-            android:checked="false"
-            android:text="Transmutación" />
-
-        <CheckBox
-            android:id="@+id/ck_filtro_adivinacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ck_filtro_necromancia"
-            android:checked="false"
-            android:text="Adivinacion" />
-
-        <Button
-            android:id="@+id/btn_filtro_aplicar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ck_filtro_transmutacion"
-            android:background="@android:drawable/editbox_background"
-            android:text="aplicar"
-            android:textColor="@android:color/holo_green_dark" />
-
-        <Button
-            android:id="@+id/btn_filtros_limpiar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/editbox_background"
-            android:text="limpiar"
-            android:textColor="@android:color/holo_green_dark"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/ck_filtro_adivinacion"
-            android:layout_toEndOf="@+id/ck_filtro_adivinacion" />
-
-        <Button
-            android:id="@+id/btn_cancelar_filtros"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/editbox_background"
-            android:text="cancelar"
-            android:textColor="@android:color/holo_green_dark"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/ck_filtro_ilucion"
-            android:layout_toEndOf="@+id/ck_filtro_ilucion" />
-
-        <Spinner
-            android:id="@+id/spn_filtro_nivel"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/ck_filtro_somatico"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/spn_filtro_clase"
-            android:spinnerMode="dialog" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-    </RelativeLayout>
-</ScrollView>
+            <CheckBox
+                android:id="@+id/checkBox5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ritual" />
+
+            <CheckBox
+                android:id="@+id/checkBox4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Concentracion" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      >
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RadioButton" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </TableRow>
+</TableLayout>

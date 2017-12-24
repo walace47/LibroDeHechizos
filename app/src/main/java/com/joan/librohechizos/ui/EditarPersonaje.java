@@ -1,6 +1,5 @@
 package com.joan.librohechizos.ui;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,17 +8,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.joan.librohechizos.Interfazes.Listable;
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Clase;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.modelo.Raza;
-import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorSpinner;
-import com.joan.librohechizos.utiles.ComunicadorDePersonajes;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by Joan on 26/03/2017.
@@ -30,85 +27,54 @@ public class EditarPersonaje extends AppCompatActivity {
     private EditText edtNombre;
     private Spinner spnClase;
     private Spinner spnRaza;
-    private OperacionesBD datos;
-    private ArrayList<Object> listaRaza;
-    private ArrayList<Object> listaClase;
+    private LinkedList<Listable> listaRaza;
+    private LinkedList<Listable> listaClase;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setContentView(R.layout.activity_crear_personaje);
-        int posClase=0,posRaza=0;
-        datos = OperacionesBD.obtenerInstancia(getApplicationContext());
+
         this.pj = obtenerPersonaje(getIntent().getStringExtra("idPersonaje"));
+
         edtNombre = (EditText) findViewById(R.id.edt_personaje_nombre);
         spnClase = (Spinner) findViewById(R.id.spn_personaje_clase);
         spnRaza = (Spinner) findViewById(R.id.spn_personaje_raza);
-        listaClase=new ArrayList<>();
-        listaRaza=new ArrayList<>();
+
+        listaClase=new LinkedList<>();
+        listaRaza=new LinkedList<>();
+
         spnClase.setAdapter(cargarClases());
         spnRaza.setAdapter(cargarRazas());
         edtNombre.setText(pj.getNombre());
-        int i = 0;
-        Raza raz;
-        Clase clas;
-        while (i < listaRaza.size()) {
-            raz = (Raza) listaRaza.get(i);
-            if (raz.getNombre().equals( pj.getIdRaza())) {
-                posRaza=i;
-                i = listaRaza.size() + 1;
-            } else {
-                i++;
-            }
-        }
-        spnRaza.setSelection(posRaza);
-        i = 0;
-        while (i < listaClase.size()) {
-            clas = (Clase) listaClase.get(i);
-            if (clas.getNombre().equals(pj.getIdClase())) {
-                posClase=i;
-                i = listaClase.size() + 1;
-            } else {
-                i++;
-            }
 
+        //Estado inicial de los spinners
+        posicionIncialSpinner(listaClase,this.pj.getClase(),spnClase);
+        posicionIncialSpinner(listaRaza,this.pj.getRaza(),spnRaza);
+    }
 
+    private void posicionIncialSpinner(LinkedList<Listable> lista,Listable elemento,Spinner spinner){
+        int i = 0,pos = 0;
+        while (i < lista.size()) {
+            if (elemento.equals(lista.get(i))) {
+                pos = i;
+                i = lista.size() + 1;
+            }
+            i++;
         }
-        spnClase.setSelection(posClase);
+        spinner.setSelection(pos);
     }
 
     private ArrayAdapter cargarClases() {
-        Cursor listaClases;
         listaClase.clear();
-        try {
-            datos.getDb().beginTransaction();
-            listaClases = datos.obtenerClases();
-            while (listaClases.moveToNext()) {
-                listaClase.add(new Clase(listaClases.getString(0), listaClases.getString(1)));
-            }
-            datos.getDb().setTransactionSuccessful();
-        } finally {
-            datos.getDb().endTransaction();
-        }
+        listaClase = Clase.getClases(getApplicationContext());
         AdaptadorSpinner adtSpnClases = new AdaptadorSpinner(this, R.layout.spiner_personalizado,listaClase);
         return adtSpnClases;
     }
 
     private ArrayAdapter cargarRazas() {
-        Cursor listaRazas;
         listaRaza.clear();
-        try {
-            datos.getDb().beginTransaction();
-            listaRazas = datos.obtenerRazas();
-            while (listaRazas.moveToNext()) {
-                listaRaza.add(new Raza(listaRazas.getString(0), listaRazas.getString(1)));
-
-            }
-            datos.getDb().setTransactionSuccessful();
-        } finally {
-            datos.getDb().endTransaction();
-        }
+        listaRaza = Raza.getRazas(this.getApplicationContext());
         AdaptadorSpinner adtSpnRazas = new AdaptadorSpinner(this, R.layout.spiner_personalizado, listaRaza);
         return adtSpnRazas;
     }
@@ -118,30 +84,15 @@ public class EditarPersonaje extends AppCompatActivity {
         nombre = edtNombre.getText().toString();
         idClase = ((Clase) spnClase.getSelectedItem()).getIdClase();
         idRaza = ((Raza) spnRaza.getSelectedItem()).getIdRaza();
-        try{
-            datos.getDb().beginTransaction();
-            datos.editarPersonaje(pj.getIdPersonaje(),nombre,idRaza,idClase);
-            datos.getDb().setTransactionSuccessful();
-        }finally {
-            datos.getDb().endTransaction();
-
-        }
+        Personaje personaje = new Personaje(pj.getIdPersonaje(),nombre,idClase,idRaza);
+        Personaje.editar(personaje,this.getApplicationContext());
         finish();
 
     }
 
     public Personaje obtenerPersonaje(String id){
-        Personaje pj=null;
-        Cursor listaPersonajes = datos.obtenerPersonaje(id);
-        try {
-             if(listaPersonajes.moveToNext()) {
-                pj=new Personaje(listaPersonajes.getString(0),listaPersonajes.getString(1),
-                        listaPersonajes.getString(2),listaPersonajes.getString(3));
-            }
-        }finally {
-            listaPersonajes.close();
-
-        }
+        Personaje pj = new Personaje(id);
+        pj = Personaje.obtener(pj,getApplicationContext());
         return pj;
     }
 

@@ -21,14 +21,16 @@ import java.util.ArrayList;
 
 public class AdaptadorHechizo extends ArrayAdapter<Hechizo> {
 
-    AppCompatActivity appCompatActivity;
-    ArrayList<Hechizo> lista;
+    protected AppCompatActivity appCompatActivity;
+    protected ArrayList<Hechizo> lista;
 
     public AdaptadorHechizo(AppCompatActivity context, ArrayList<Hechizo> lista) {
         super(context, R.layout.icono_hechizo, lista);
         this.lista = lista;
         appCompatActivity = context;
     }
+
+
 
     public ArrayList<Hechizo> getListaActual() {
         return this.lista;

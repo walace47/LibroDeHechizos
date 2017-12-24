@@ -11,66 +11,41 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.joan.librohechizos.Interfazes.Listable;
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.*;
-import com.joan.librohechizos.sqlite.OperacionesBD;
 import com.joan.librohechizos.utiles.AdaptadorSpinner;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-public class CrearPersonajeActivity extends AppCompatActivity {
+public class CrearPersonaje extends AppCompatActivity {
     private EditText edtNombre;
     private Spinner spnClase;
     private Spinner spnRaza;
-    private OperacionesBD datos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setContentView(R.layout.activity_crear_personaje);
-        datos = OperacionesBD.obtenerInstancia(getApplicationContext());
-
         edtNombre = (EditText) findViewById(R.id.edt_personaje_nombre);
         spnClase = (Spinner) findViewById(R.id.spn_personaje_clase);
         spnRaza = (Spinner) findViewById(R.id.spn_personaje_raza);
         spnClase.setAdapter(cargarClases());
         spnRaza.setAdapter(cargarRazas());
 
-
     }
 
     private ArrayAdapter cargarClases() {
         Cursor listaClases;
-        ArrayList<Object> clases = new ArrayList<>();
-        try {
-            datos.getDb().beginTransaction();
-            listaClases = datos.obtenerClases();
-            while (listaClases.moveToNext()) {
-                clases.add(new Clase(listaClases.getString(0), listaClases.getString(1)));
-            }
-            datos.getDb().setTransactionSuccessful();
-        } finally {
-            datos.getDb().endTransaction();
-        }
+        LinkedList<Listable> clases =  Clase.getClases(getApplicationContext());
         AdaptadorSpinner adtSpnClases = new AdaptadorSpinner(this, R.layout.spiner_personalizado, clases);
         return adtSpnClases;
     }
 
     private ArrayAdapter cargarRazas() {
         Cursor listaRazas;
-        ArrayList<Object> razas = new ArrayList<>();
-        try {
-            datos.getDb().beginTransaction();
-            listaRazas = datos.obtenerRazas();
-            while (listaRazas.moveToNext()) {
-                razas.add(new Raza(listaRazas.getString(0), listaRazas.getString(1)));
-            }
-            datos.getDb().setTransactionSuccessful();
-        } finally {
-            datos.getDb().endTransaction();
-        }
+        LinkedList<Listable> razas = Raza.getRazas(getApplicationContext());
         AdaptadorSpinner adtSpnRazas = new AdaptadorSpinner(this,  R.layout.spiner_personalizado, razas);
         return adtSpnRazas;
     }
@@ -89,23 +64,16 @@ public class CrearPersonajeActivity extends AppCompatActivity {
     }
 
     private void insertarPersonaje(String nombre,String idClase,String idRaza){
-        long idPersonaje;
-        try {
-            datos.getDb().beginTransaction();
-            Personaje personajeNuevo = new Personaje("", nombre, idClase, idRaza);
+        Personaje personajeNuevo = new Personaje("", nombre, idClase, idRaza);
+        boolean exito = Personaje.insertar(personajeNuevo,getApplicationContext());
+        Toast mensajeExito;
+        if (exito){
+            mensajeExito = Toast.makeText(getApplicationContext(),"Personaje creado correctamente",Toast.LENGTH_SHORT);
+        }else{
+            mensajeExito = Toast.makeText(getApplicationContext(),"Puede que halla un problema y no se a creado correctamente el personaje",Toast.LENGTH_SHORT);
 
-            idPersonaje = datos.insertarPersonaje(personajeNuevo);
-            Log.d("Personaj0e nuevo", "ID: " + idPersonaje);
-
-            datos.getDb().setTransactionSuccessful();
-            Toast mensajeExito = Toast.makeText(getApplicationContext(),"Personaje creado correctamente",Toast.LENGTH_SHORT);
-            mensajeExito.show();
-
-        } finally {
-            datos.getDb().endTransaction();
         }
-
-
+        mensajeExito.show();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

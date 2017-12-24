@@ -1,30 +1,26 @@
 package com.joan.librohechizos.ui;
 
-import android.app.ActionBar;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.Window;
 import android.webkit.WebView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Clase;
 import com.joan.librohechizos.modelo.Escuela;
 import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.sqlite.OperacionesBD;
-import com.joan.librohechizos.utiles.ComunicadorDeHechizo;
 
 import java.util.ArrayList;
 
 public class MostrarHechizo extends AppCompatActivity {
     private Hechizo hechizo;
     private OperacionesBD datos;
-    TextView nombre, rango, nivelEscuela, componentes;
-    TextView  aMayorNivel, tiempoDeCasteo, duracion, clases;
-    WebView descripcion;
+    private TextView nombre, rango, nivelEscuela, componentes;
+    private TextView  aMayorNivel, tiempoDeCasteo, duracion, clases;
+    private WebView descripcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +103,6 @@ public class MostrarHechizo extends AppCompatActivity {
                 "\n" +
                 "tr:hover td { background: #d0dafd; color: #339; }"+
                 "</style></head><p>"+hechizo.getDescripcion()+"</p></body></html>";
-        //description=description.replaceAll("<br>","</p><p>");
         descripcion.loadData(description,"text/html; charset=UTF-8",null);
         duracion = (TextView) findViewById(R.id.txt_duracion);
         if (hechizo.getConcentracion() == 1) {
