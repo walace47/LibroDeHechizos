@@ -35,7 +35,7 @@ public class MostrarHechizo extends AppCompatActivity {
 
     }
 
-    private void asignarTextViewConSuId() {
+    protected void asignarTextViewConSuId() {
         clases = (TextView) findViewById(R.id.txt_hechizo_clases);
         int listaClaseTamanio = hechizo.getClases().size();
        clases.setText(hechizo.getClases().get(0).getNombre());

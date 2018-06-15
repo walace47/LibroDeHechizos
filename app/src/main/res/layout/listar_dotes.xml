@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/contenedor_libro_hechizos" />
+    <include layout="@layout/contenido_dotes" />
 
 
     <android.support.design.widget.NavigationView

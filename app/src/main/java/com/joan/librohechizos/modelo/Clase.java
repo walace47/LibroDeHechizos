@@ -3,10 +3,9 @@ package com.joan.librohechizos.modelo;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.joan.librohechizos.Interfazes.Listable;
+import com.joan.librohechizos.Interfaces.Listable;
 import com.joan.librohechizos.sqlite.OperacionesBD;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 

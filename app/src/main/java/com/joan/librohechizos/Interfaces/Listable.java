@@ -1,4 +1,4 @@
-package com.joan.librohechizos.Interfazes;
+package com.joan.librohechizos.Interfaces;
 
 /**
  * Created by Joan on 23/12/2017.

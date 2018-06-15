@@ -5,5 +5,6 @@
     <color name="colorAccent">#744043ff</color>
     <color name="colorSeparador">#1d4c5bf3</color>
     <color name="colorFondo">#ffffff</color>
+    <color name="white">#ffffff</color>
 
 </resources>

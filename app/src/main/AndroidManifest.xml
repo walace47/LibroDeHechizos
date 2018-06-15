@@ -49,9 +49,17 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.LibroDeHechizos"/>
+                android:value=".ui.LibroDeHechizos" />
         </activity>
         <activity android:name=".ui.Donacion">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ListarPersonajes" />
+        </activity>
+        <activity android:name=".ui.MostrarDote" />
+        <activity
+            android:name=".ui.ListaDotes"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ListarPersonajes" />

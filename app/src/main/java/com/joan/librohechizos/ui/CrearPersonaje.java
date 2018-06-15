@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.joan.librohechizos.Interfazes.Listable;
+import com.joan.librohechizos.Interfaces.Listable;
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.*;
 import com.joan.librohechizos.utiles.AdaptadorSpinner;

@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.joan.librohechizos.Interfazes.Listable;
+import com.joan.librohechizos.Interfaces.Listable;
 import com.joan.librohechizos.R;
-import com.joan.librohechizos.modelo.Clase;
-import com.joan.librohechizos.ui.CrearPersonaje;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**

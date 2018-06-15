@@ -14,7 +14,7 @@ import com.joan.librohechizos.sqlite.LibroHechizosBD.*;
 import java.util.ArrayList;
 
 /**
- * Created by Giuliano on 06/03/2017.
+
  */
 
 public final class OperacionesBD {
@@ -24,16 +24,113 @@ public final class OperacionesBD {
     private static OperacionesBD instancia = new OperacionesBD();
 
     private OperacionesBD() {
+
     }
 
     public static OperacionesBD obtenerInstancia(Context contexto) {
 
-            baseDatos = new LibroHechizosBD(contexto);
-
+        baseDatos = new LibroHechizosBD(contexto);
 
 
         return instancia;
     }
+
+    public Cursor obtenerDote(String id) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = Tablas.DOTE;
+        String[] proyeccion = {
+                Dotes.ID_DOTE,
+                Dotes.NOMBRE,
+                Dotes.REQUISITOS,
+                Dotes.DESCRIPCION};
+
+        String where = Dotes.ID_DOTE + " = " + id;
+
+        builder.setTables(tablas);
+
+        Cursor resultado = builder.query(db, proyeccion, where, null, null, null, Dotes.NOMBRE);
+
+        return resultado;
+
+    }
+
+    public Cursor obtenerDotes() {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = Tablas.DOTE;
+        String[] proyeccion = {
+                Dotes.ID_DOTE,
+                Dotes.NOMBRE,
+                Dotes.REQUISITOS};
+
+
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, Dotes.NOMBRE);
+
+        return resultado;
+
+    }
+
+    private boolean estaAprendidoDote(Dote dote, Personaje pj) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = Tablas.DOTES_APRENDIDOS;
+        String[] proyeccion = {
+                Dotes.ID_DOTE,
+                Personajes.ID_PERSONAJE};
+
+        String where = Dotes.ID_DOTE + " = " + dote.getIdDote() +
+                " AND " + Personajes.ID_PERSONAJE + " = " + pj.getIdPersonaje();
+
+        builder.setTables(tablas);
+
+        Cursor resultado = builder.query(db, proyeccion, where, null, null, null, null);
+
+        return (resultado.getCount() > 0);
+    }
+
+    public Cursor obtenerDotesAprendidos(Personaje pj){
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String a = Tablas.DOTES_APRENDIDOS;
+        String b = Tablas.PERSONAJE ;
+        String c = Tablas.DOTE ;
+        String tablas = a + " INNER JOIN "+ b +
+                            " ON " + a+"."+Personajes.ID_PERSONAJE +" = "+ b+"."+Personajes.ID_PERSONAJE+
+                        " INNER JOIN " + c +
+                             " ON "+ c+"."+Dotes.ID_DOTE +" = "+ a+"."+Dotes.ID_DOTE;
+        String[] proyeccion = {
+                Tablas.DOTE+"."+Dotes.ID_DOTE,
+                Tablas.DOTE+"."+Dotes.NOMBRE,
+                Tablas.DOTE+"."+Dotes.REQUISITOS};
+
+        String WHERE = b+"."+Personajes.ID_PERSONAJE +" = "+ pj.getIdPersonaje();
+
+        builder.setTables(tablas);
+        Cursor resultado = builder.query(db, proyeccion, WHERE, null, null, null, Tablas.DOTE+"."+Dotes.NOMBRE);
+
+        return resultado;
+    }
+
+    public void AprenderDote(Dote dote, Personaje pj) {
+        if (!estaAprendidoDote(dote, pj)) {
+            ContentValues valores = new ContentValues();
+            valores.put(Dotes.ID_DOTE, dote.getIdDote());
+            valores.put(Personajes.ID_PERSONAJE, pj.getIdPersonaje());
+            getDb().insertOrThrow(Tablas.DOTES_APRENDIDOS, null, valores);
+        }
+    }
+
+    public void eliminarDoteAprendido(Dote dote, Personaje pj) {
+        if (estaAprendidoDote(dote, pj)) {
+            String whereClause = Personajes.ID_PERSONAJE + " =? " + " AND " + Dotes.ID_DOTE + " =? ";
+            String[] whereArgs = {pj.getIdPersonaje(),dote.getIdDote()};
+            getDb().delete(Tablas.DOTES_APRENDIDOS, whereClause, whereArgs);
+
+        }
+    }
+
 
     public Cursor obtenerPersonajes() {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
@@ -51,9 +148,10 @@ public final class OperacionesBD {
                 Tablas.PERSONAJE + "." + Personajes.NOMBRE,
                 Tablas.CLASE + "." + Clases.NOMBRE + " AS " + Tablas.CLASE,
                 Tablas.RAZA + "." + Razas.NOMBRE + " AS " + Tablas.RAZA};
+        String WHERE = "id_personaje <> -1";
 
         builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, null);
+        Cursor resultado = builder.query(db, proyeccion, WHERE, null, null, null, null);
 
         return resultado;
     }
@@ -84,7 +182,7 @@ public final class OperacionesBD {
                 Clases.NOMBRE};
 
         builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion, null, null, null, null,Clases.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, null, null, null, null, Clases.NOMBRE);
 
         return resultado;
     }
@@ -122,7 +220,7 @@ public final class OperacionesBD {
         };
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL + "," + Tablas.HECHIZOS + "." + Hechizos.NOMBRE);
 
         return resultado;
     }
@@ -130,20 +228,23 @@ public final class OperacionesBD {
     public Cursor obtenerHechizos2(String filtro) {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s ",
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s",
                 Tablas.HECHIZOS,
-                Tablas.HECHIZOS_POR_CLASE, Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_HECHIZO,
-                Tablas.CLASE, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_CLASE, Tablas.CLASE + "." + Clases.ID_CLASE);
+                Tablas.HECHIZOS_POR_CLASE, Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO,
+                Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_HECHIZO,
+                Tablas.CLASE, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_CLASE, Tablas.CLASE + "." + Clases.ID_CLASE,
+                Tablas.ESCUELA, Tablas.HECHIZOS + "." + Hechizos.ESCUELA, Tablas.ESCUELA + "." + Escuelas.ID_ESCUELA);
         String[] proyeccion = {
                 Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO + " AS " + Tablas.HECHIZOS,
                 Tablas.HECHIZOS + "." + Hechizos.NOMBRE,
                 Tablas.HECHIZOS + "." + Hechizos.RITUAL,
-                Tablas.HECHIZOS + "." + Hechizos.ESCUELA,
                 Tablas.HECHIZOS + "." + Hechizos.NIVEL,
+                Tablas.ESCUELA + "." + Escuelas.ID_ESCUELA,
+                Tablas.ESCUELA + "." + Escuelas.NOMBRE,
         };
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, filtro, null, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL + "," + Tablas.HECHIZOS + "." + Hechizos.NOMBRE);
 
         return resultado;
     }
@@ -180,10 +281,10 @@ public final class OperacionesBD {
                 Personajes.ID_PERSONAJE,
                 Tablas.PERSONAJE + "." + Personajes.NOMBRE,
                 Tablas.CLASE + "." + Clases.NOMBRE,
-                Tablas.CLASE + "."+  Clases.ID_CLASE,
+                Tablas.CLASE + "." + Clases.ID_CLASE,
                 Tablas.RAZA + "." + Razas.NOMBRE,
                 Tablas.RAZA + "." + Razas.ID_RAZA
-                                 };
+        };
 
         builder.setTables(tablas);
         Cursor resultado = builder.query(db, proyeccion, selection, selectionArgs, null, null, null);
@@ -192,10 +293,10 @@ public final class OperacionesBD {
 
     }
 
-    public Cursor obtenerHechizo(String idHechizo){
+    public Cursor obtenerHechizo(String idHechizo) {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        String seleccion=String.format("%s =? ",Tablas.HECHIZOS+"."+Hechizos.ID_HECHIZO);
+        String seleccion = String.format("%s =? ", Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO);
         String[] selectionArgs = {idHechizo};
         String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s ",
                 Tablas.HECHIZOS,
@@ -217,11 +318,11 @@ public final class OperacionesBD {
                 Tablas.HECHIZOS + "." + Hechizos.ESCUELA,
                 Tablas.HECHIZOS + "." + Hechizos.NIVEL,
                 Tablas.HECHIZOS + "." + Hechizos.DURACION,
-                Tablas.CLASE+ "." + Clases.ID_CLASE,
+                Tablas.CLASE + "." + Clases.ID_CLASE,
                 Tablas.CLASE + "." + Clases.NOMBRE
         };
         builder.setTables(tablas);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, selectionArgs , null, null, null );
+        Cursor resultado = builder.query(db, proyeccion, seleccion, selectionArgs, null, null, null);
 
         return resultado;
     }
@@ -292,7 +393,39 @@ public final class OperacionesBD {
         String[] seleccionArg = {idPersonaje};
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL + "," + Tablas.HECHIZOS + "." + Hechizos.NOMBRE);
+
+        return resultado;
+    }
+
+    public Cursor obtenerHechizosAprendidos(String idPersonaje, String filtro) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String tablas = String.format("%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s " +
+                        "INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s",
+                Tablas.PERSONAJE, Tablas.HECHIZOS_APRENDIDOS, Tablas.PERSONAJE + "." + Personajes.ID_PERSONAJE,
+                Tablas.HECHIZOS_APRENDIDOS + "." + Personajes.ID_PERSONAJE,
+                Tablas.HECHIZOS, Tablas.HECHIZOS_APRENDIDOS + "." + Hechizos.ID_HECHIZO, Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO,
+                Tablas.HECHIZOS_POR_CLASE, Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_HECHIZO,
+                Tablas.CLASE, Tablas.HECHIZOS_POR_CLASE + "." + HechizosPorClases.ID_CLASE, Tablas.CLASE + "." + Clases.ID_CLASE,
+                Tablas.ESCUELA, Tablas.HECHIZOS + "." + Hechizos.ESCUELA, Tablas.ESCUELA + "." + Escuelas.ID_ESCUELA);
+
+        String[] proyeccion = {
+                Tablas.HECHIZOS + "." + Hechizos.ID_HECHIZO + " AS " + Tablas.HECHIZOS,
+                Tablas.HECHIZOS + "." + Hechizos.NOMBRE,
+                Tablas.HECHIZOS + "." + Hechizos.RITUAL,
+                Tablas.HECHIZOS + "." + Hechizos.NIVEL,
+                Tablas.ESCUELA + "." + Escuelas.ID_ESCUELA,
+                Tablas.ESCUELA + "." + Escuelas.NOMBRE,
+        };
+        builder.setTables(tablas);
+        builder.setDistinct(true);
+        String seleccion = String.format("%s=?", Tablas.PERSONAJE + "." + Personajes.ID_PERSONAJE);
+        if (!filtro.equals("")) {
+            seleccion = seleccion + " AND " + filtro;
+        }
+        String[] seleccionArg = {idPersonaje};
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL + "," + Tablas.HECHIZOS + "." + Hechizos.NOMBRE);
 
         return resultado;
     }
@@ -329,11 +462,12 @@ public final class OperacionesBD {
                 Tablas.HECHIZOS_APRENDIDOS + "." + HechizosAprendidos.PREPARADO);
         if (!selecFiltro.equals("")) {
             seleccion = seleccion + " AND " + selecFiltro;
-        };
+        }
+        ;
         String[] seleccionArg = {idPersonaje};
         builder.setTables(tablas);
         builder.setDistinct(true);
-        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL+","+Tablas.HECHIZOS + "." + Hechizos.NOMBRE );
+        Cursor resultado = builder.query(db, proyeccion, seleccion, seleccionArg, null, null, Tablas.HECHIZOS + "." + Hechizos.NIVEL + "," + Tablas.HECHIZOS + "." + Hechizos.NOMBRE);
 
         return resultado;
     }
@@ -363,7 +497,7 @@ public final class OperacionesBD {
 
     }
 
-    public void dejarDePreparaHechizo(String idHechizo,String idPersonaje){
+    public void dejarDePreparaHechizo(String idHechizo, String idPersonaje) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
         ContentValues valores = new ContentValues();
         valores.put(HechizosAprendidos.PREPARADO, 0);
@@ -382,7 +516,7 @@ public final class OperacionesBD {
         db.update(Tablas.HECHIZOS_APRENDIDOS, valores, whereClause, whereArgs);
     }
 
-    public void editarPersonaje(Personaje pj){
+    public void editarPersonaje(Personaje pj) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
         ContentValues valores = new ContentValues();
         valores.put(Personajes.ID_CLASE, pj.getIdClase());

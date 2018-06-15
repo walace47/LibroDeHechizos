@@ -1,7 +1,12 @@
 package com.joan.librohechizos.modelo;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.joan.librohechizos.sqlite.OperacionesBD;
+import com.joan.librohechizos.ui.LibroDeHechizos;
 
 import java.util.ArrayList;
 
@@ -210,5 +215,45 @@ public class Hechizo  {
 
     public void setClases(ArrayList<Clase> clases) {
         this.clases = clases;
+    }
+
+    public static ArrayList<Hechizo> getHechizos(Context contexto,String filtro){
+        OperacionesBD datos;
+        datos = OperacionesBD.obtenerInstancia(contexto);
+        Cursor cursorHechizo = datos.obtenerHechizos2(filtro);
+        ArrayList<Hechizo> lista = listarHechizos(cursorHechizo);
+        return lista;
+    }
+
+    public static  ArrayList<Hechizo> getHechizosAprendidos(Context contexto,String filtro,Personaje pj){
+        OperacionesBD datos;
+        datos = OperacionesBD.obtenerInstancia(contexto);
+        Cursor cursorHechizo = datos.obtenerHechizosAprendidos(pj.getIdPersonaje(),filtro);
+        ArrayList<Hechizo> lista = listarHechizos(cursorHechizo);
+        return lista;
+    }
+
+    private static ArrayList<Hechizo> listarHechizos(Cursor cursorHechizo){
+        ArrayList<Hechizo> lista = new ArrayList<>();
+
+        if (cursorHechizo.moveToNext()) {
+            lista.add(new Hechizo("-1", cursorHechizo.getInt(3)));
+        }
+        cursorHechizo.moveToPrevious();
+        try {
+            while (cursorHechizo != null && cursorHechizo.moveToNext()) {
+                Escuela esc = new Escuela(cursorHechizo.getString(5), cursorHechizo.getString(4));
+                if (!lista.isEmpty() && lista.get(lista.size() - 1).getNivel() != cursorHechizo.getInt(3)) {
+                    lista.add(new Hechizo("-1", cursorHechizo.getInt(3)));
+                }
+
+                lista.add(new Hechizo(cursorHechizo.getString(0),cursorHechizo.getString(1),cursorHechizo.getInt(2),
+                        esc,cursorHechizo.getInt(3)));
+            }
+        } finally {
+            cursorHechizo.close();
+
+        }
+        return lista;
     }
 }

@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.joan.librohechizos.Interfazes.Listable;
+import com.joan.librohechizos.Interfaces.Listable;
 import com.joan.librohechizos.R;
 import com.joan.librohechizos.modelo.Clase;
 import com.joan.librohechizos.modelo.Personaje;

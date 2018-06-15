@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.joan.librohechizos.modelo.Clase;
+import com.joan.librohechizos.modelo.Dote;
 import com.joan.librohechizos.modelo.Hechizo;
 import com.joan.librohechizos.modelo.Personaje;
 import com.joan.librohechizos.modelo.Raza;
@@ -30,7 +31,7 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "librohechizos.sqlite";
 
-    private static final int VERSION_ACTUAL = 10;
+    private static final int VERSION_ACTUAL = 12;
 
     private final Context contexto;
 
@@ -48,6 +49,8 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         String HECHIZOS_APRENDIDOS = "hechizos_aprendidos";
         String HECHIZOS_POR_CLASE = "hechizos_por_clase";
         String ESCUELA = "escuela";
+        String DOTE = "dote";
+        String DOTES_APRENDIDOS = "dotes_aprendidos";
     }
 
     interface Referencias {
@@ -65,6 +68,9 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
 
         String ID_HECHIZOS = String.format("REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE",
                 Tablas.HECHIZOS, Hechizos.ID_HECHIZO);
+
+        String ID_DOTE = String.format("REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE",
+                Tablas.DOTE, Dotes.ID_DOTE);
     }
 
     @Override
@@ -74,7 +80,8 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 db.setForeignKeyConstraintsEnabled(true);
             } else {
-                db.execSQL("PRAGMA foreign_keys=ON");
+                String sql ="PRAGMA foreign_keys = ON";
+                db.execSQL(sql);
             }
         }
     }
@@ -100,6 +107,8 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO raza(nombre) values('Goliat')");
             //se carga personaje de prueba
             db.execSQL("INSERT INTO personaje(nombre,id_clase,id_raza) values('leonidas',3,2)");
+
+            db.execSQL("INSERT INTO personaje(id_personaje,nombre,id_clase,id_raza) values(-1,'guest',3,2)");
             //se cargan escuelas
             db.execSQL(String.format("INSERT INTO %s(%s, %s) values(1,'conjuracion')", Tablas.ESCUELA, Escuelas.ID_ESCUELA, Escuelas.NOMBRE));
             db.execSQL(String.format("INSERT INTO %s(%s, %s) values(2,'evocacion')", Tablas.ESCUELA, Escuelas.ID_ESCUELA, Escuelas.NOMBRE));
@@ -410,6 +419,31 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
         }
     }
 
+    private void leerDotes(SQLiteDatabase db){
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream("assets/Dotes.csv");
+        BufferedReader buffer = null;
+        try {
+            buffer = new BufferedReader(new InputStreamReader(inStream, "Cp1252"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        try {
+            buffer.readLine();
+            while ((line = buffer.readLine()) != null) {
+                String[] colums = line.split("&");
+                ContentValues cv = new ContentValues();
+                cv.put(Dotes.ID_DOTE, colums[0].trim());
+                cv.put(Dotes.NOMBRE, colums[1].trim());
+                cv.put(Dotes.REQUISITOS, colums[2].trim());
+                cv.put(Dotes.DESCRIPCION, colums[3].trim());
+                db.insert(Tablas.DOTE, null, cv);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -473,20 +507,57 @@ public class LibroHechizosBD extends SQLiteOpenHelper {
                 HechizosAprendidos.ID_HECHIZO, Referencias.ID_HECHIZOS,
                 HechizosAprendidos.PREPARADO,
                 Personajes.ID_PERSONAJE, Hechizos.ID_HECHIZO));
+        agregarDotes(db);
         precargarDatos(db);
 
+    }
+
+    public void agregarDotes(SQLiteDatabase db){
+
+       db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                       " %s TEXT NOT NULL, %s TEXT NOT NULL,  %s TEXT NOT NULL)",
+                Tablas.DOTE,
+                Dotes.ID_DOTE,
+                Dotes.NOMBRE,
+                Dotes.DESCRIPCION,
+                Dotes.REQUISITOS));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER NOT NULL %s," +
+                        "%s INTEGER NOT NULL %s, PRIMARY KEY(%s,%s))",
+                Tablas.DOTES_APRENDIDOS,
+                Dotes.ID_DOTE, Referencias.ID_DOTE,
+                Personajes.ID_PERSONAJE, Referencias.ID_PERSONAJE,
+                Personajes.ID_PERSONAJE, Dotes.ID_DOTE));
+        leerDotes( db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if (newVersion > oldVersion && oldVersion == 8) {
+       /* if (newVersion > oldVersion && oldVersion == 8) {
             precargarHechizoscsvNuevos(db);
         }
         if (newVersion > oldVersion && oldVersion == 9){
             precargarHechizoscsv(db,"assets/heroismo.txt");
             precargarHechizosXclaseCsv(db,"assets/clases.txt");
+        }*/
+
+        if (newVersion > oldVersion){
+            if(oldVersion <= 8){
+                precargarHechizoscsvNuevos(db);
+            }
+            if (oldVersion <= 9) {
+                precargarHechizoscsv(db,"assets/heroismo.txt");
+                precargarHechizosXclaseCsv(db,"assets/clases.txt");
+            }
+         if (oldVersion <= 10) {
+             agregarDotes(db);
+         }
+          if (oldVersion <=11){
+              db.execSQL("INSERT INTO personaje(id_personaje,nombre,id_clase,id_raza) values(-1,'guest',3,2)");
+          }
         }
+
     }
 
 

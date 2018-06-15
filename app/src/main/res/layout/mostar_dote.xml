@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark">
+
+        <TableRow
+            android:id="@+id/nombre_dote"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:paddingEnd="8dp"
+            android:paddingLeft="8dp">
+
+
+            <TextView
+                android:id="@+id/txt_dote_nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_span="0"
+                android:background="@android:drawable/editbox_background_normal"
+                android:gravity="center"
+                android:text="mostrar nombre"
+                android:textColor="@android:color/background_dark"
+                android:textColorLink="@android:color/background_dark"
+                android:textIsSelectable="false"
+                android:textSize="16sp"
+                tools:text="ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txt_dote_requisito"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="TextView"
+                android:textColor="@color/colorFondo"
+                android:textSize="14sp"
+                tools:text="Requisitos" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <WebView
+                android:id="@+id/txt_dote_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@android:drawable/editbox_background" />
+        </TableRow>
+
+    </TableLayout>
+</ScrollView>

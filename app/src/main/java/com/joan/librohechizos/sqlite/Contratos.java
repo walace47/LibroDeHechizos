@@ -8,6 +8,14 @@ import java.util.UUID;
 
 public class Contratos {
 
+    interface ColumnasDote{
+        String ID_DOTE = "id_dote";
+        String NOMBRE = "nombre";
+        String DESCRIPCION = "descripcion";
+        String REQUISITOS = "requisitos";
+    }
+
+
     interface ColumnasPersonaje {
         String ID_PERSONAJE = "id_personaje";
         String NOMBRE = "nombre";
@@ -67,6 +75,10 @@ public class Contratos {
 
     }
     public static class HechizosAprendidos implements ColumnasHechizosAprendidos{
+
+    }
+
+    public static class Dotes implements ColumnasDote{
 
     }
 
